@@ -1,0 +1,9 @@
+{
+  "configurations": [
+    {
+      "compilerPath": "/usr/bin/g++",
+      "IntelliSenseMode": "gcc-arm"
+    }
+  ],
+  "version": 4
+}
