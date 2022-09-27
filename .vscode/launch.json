@@ -11,7 +11,7 @@
       "environment": [],
       "preLaunchTask": "Build",
       "postDebugTask": "Cleanup",
-      "program": "/home/matejhakos/pv021-neural-network/src/main",
+      "program": "/home/matejhakos/pv021-neural-network/src/build/main",
       "internalConsoleOptions": "openOnSessionStart",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
