@@ -1,2 +1,11 @@
+<<<<<<< HEAD
 .vscode/
 src/build/
+=======
+.vscode
+src/build/
+
+
+data/fashion_mnist_train_vectors.csv
+data/fashion_mnist_test_vectors.csv
+>>>>>>> 89f8d208c4027185c09fd7f9549f979e0fbc3fbc

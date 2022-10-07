@@ -1,3 +1,8 @@
+#ifndef PV021_NEURAL_NETWORK_ACTIVATION_H
+#define PV021_NEURAL_NETWORK_ACTIVATION_H
+
+using namespace std;
+
 class Activation
 {
 public:
@@ -6,5 +11,7 @@ public:
     static double tanh(double sum);
     static double relu(double sum);
 
-    static void parseActivationFuction(string activation, double (**activationFunction)(double sum));
+    static void parseActivationFunction(string activation, double (**activationFunction)(double sum));
 };
+
+#endif

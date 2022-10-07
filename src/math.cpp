@@ -27,11 +27,13 @@ void Matrix::add(double n)
 
 void Matrix::add(Matrix n)
 {
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
+    if (rows == n.rows && cols == n.cols) {
+        for (size_t i = 0; i < this->rows; i++)
         {
-            this->matrix[i][j] += n.matrix[i][j];
+            for (size_t j = 0; j < this->cols; j++)
+            {
+                this->matrix[i][j] += n.matrix[i][j];
+            }
         }
     }
 }
@@ -46,14 +48,15 @@ void Matrix::multiply(double n)
         }
     }
 }
-// A.K.A. Dot-Product
+
+// A.K.A. Cross-Product
 Matrix Matrix::multiply(Matrix n)
 {
     if (this->cols != n.rows)
     {
         invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
     }
-    Matrix *p = new Matrix(this->rows, n.cols);
+    auto *p = new Matrix(this->rows, n.cols);
     for (size_t i = 0; i < p->rows; i++)
     {
         for (size_t j = 0; j < p->cols; j++)
@@ -64,6 +67,7 @@ Matrix Matrix::multiply(Matrix n)
             }
         }
     }
+    // why the next 3 lines?
     this->cols = p->cols;
     this->rows = p->rows;
     this->matrix = p->matrix;
@@ -72,7 +76,7 @@ Matrix Matrix::multiply(Matrix n)
 
 void Matrix::transpose()
 {
-    Matrix *newMatrix = new Matrix(this->cols, this->rows);
+    auto *newMatrix = new Matrix(this->cols, this->rows);
     for (size_t i = 0; i < this->rows; i++)
     {
         for (size_t j = 0; j < this->cols; j++)
