@@ -1,3 +1,6 @@
+#ifndef PV021_NEURAL_NETWORK_MATH_H
+#define PV021_NEURAL_NETWORK_MATH_H
+
 #include <iostream>
 using namespace std;
 
@@ -29,3 +32,5 @@ public:
     // DEPRECATED
     void randomise();
 };
+
+#endif

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "perceptron.cpp"
 #include "neural_network.cpp"
-#include "math.cpp"
+#include "math.h"
 using namespace std;
 
 int main()

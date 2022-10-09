@@ -29,7 +29,7 @@ public:
 
     void setActivationFunction(string activation = "relu")
     {
-        Activation::parseActivationFuction(activation, &(this->activationFunction));
+        Activation::parseActivationFunction(activation, &(this->activationFunction));
     }
     void setInputLayerSize(size_t size)
     {

@@ -24,7 +24,7 @@ double Activation::relu(double sum)
     return sum >= 0 ? sum : 0;
 }
 
-void Activation::parseActivationFuction(string activation, double (**activationFunction)(double sum))
+void Activation::parseActivationFunction(string activation, double (**activationFunction)(double sum))
 {
     *activationFunction = Activation::relu;
     if (activation == "identity")

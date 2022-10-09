@@ -7,9 +7,5 @@ include_directories(src/headers)
 
 add_executable(pv021_neural_network
         src/main.cpp
-        src/activation.cpp
-        src/headers/activation.h
         src/math.cpp
-        src/headers/math.h
-        src/neural_network.cpp
-        src/perceptron.cpp)
+        src/headers/layer.h src/layer.cpp)
