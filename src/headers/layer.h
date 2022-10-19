@@ -5,7 +5,7 @@
 #ifndef PV021_NEURAL_NETWORK_LAYER_H
 #define PV021_NEURAL_NETWORK_LAYER_H
 
-#include "math.h"
+#include "utils.h"
 
 using namespace std;
 

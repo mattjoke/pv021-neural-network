@@ -1,0 +1,3 @@
+D:/MUNI/FI/_mgr/semester_1/PV021_neural_networks/pv021-neural-network/cmake-build-debug/CMakeFiles/pv021_neural_network.dir
+D:/MUNI/FI/_mgr/semester_1/PV021_neural_networks/pv021-neural-network/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/MUNI/FI/_mgr/semester_1/PV021_neural_networks/pv021-neural-network/cmake-build-debug/CMakeFiles/rebuild_cache.dir

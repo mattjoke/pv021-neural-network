@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./headers/math.h"
+#include "./headers/utils.h"
 using namespace std;
 
 void Matrix::initAndClear()
@@ -63,8 +63,10 @@ Matrix Matrix::multiply(Matrix n)
         {
             for (size_t k = 0; k < this->cols; k++)
             {
+                cout << this->matrix[i][k] << " " << n.matrix[k][j] << endl;
                 p->matrix[i][j] += this->matrix[i][k] * n.matrix[k][j];
             }
+            cout << endl;
         }
     }
     // why the next 3 lines?

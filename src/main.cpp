@@ -1,7 +1,7 @@
 #include <iostream>
 #include "perceptron.cpp"
 #include "neural_network.cpp"
-#include "math.h"
+#include "utils.h"
 using namespace std;
 
 int main()
@@ -25,11 +25,13 @@ int main()
     // double point3[2] = {3, 0};
     // // cout << p->feedForward(point3) << "\n";
     // NeuralNetwork *n = new NeuralNetwork();
-    Matrix *m = new Matrix(2, 3);
+    auto *m = new Matrix(2, 3);
     m->add(+1);
     m->printMatrix();
+    m->randomise();
+    m->printMatrix();
 
-    Matrix *n = new Matrix(3, 2);
+    auto *n = new Matrix(3, 2);
     n->randomise();
     n->printMatrix();
 
@@ -37,7 +39,11 @@ int main()
     n->printMatrix();
 
     n->transpose();
+    m->printMatrix();
     n->printMatrix();
     // n->multiply(*m);
     // n->printMatrix();
+    m->multiply(*n);
+    m->printMatrix();
+    n->printMatrix();
 }

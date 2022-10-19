@@ -1,5 +1,5 @@
-#ifndef PV021_NEURAL_NETWORK_MATH_H
-#define PV021_NEURAL_NETWORK_MATH_H
+#ifndef PV021_NEURAL_NETWORK_UTILS_H
+#define PV021_NEURAL_NETWORK_UTILS_H
 
 #include <iostream>
 using namespace std;
