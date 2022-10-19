@@ -12,3 +12,7 @@ Matrix Layer::feedForward(Matrix inputs)
     inputs.map(this->activationFunction);
     return inputs;
 }
+
+Matrix Layer::getOutputs(Matrix inputs) const {
+    return inputs.multiply(this->weights);
+}

@@ -12,6 +12,7 @@ using namespace std;
 class Layer
 {
 private:
+
     size_t percepts_below;
     size_t num_perceptrons;
     Matrix weights = Matrix(0,0);
@@ -42,6 +43,9 @@ public:
     {
         return this->bias;
     }
+
+    Matrix getOutputs(Matrix inputs) const;
+
 };
 
 #endif // PV021_NEURAL_NETWORK_LAYER_H
