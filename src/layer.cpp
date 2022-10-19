@@ -5,6 +5,6 @@
 #include "./headers/layer.h"
 using namespace std;
 
-Matrix Layer::getOutputs(Matrix inputs) {
+Matrix Layer::getOutputs(Matrix inputs) const {
     return inputs.multiply(this->weights);
 }
