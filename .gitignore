@@ -1,7 +1,12 @@
 .vscode
+.vscode/
 src/build
 
-build
+build/
+cmake-build-debug/
+.idea/
+.idea
+
 
 data/fashion_mnist_train_vectors.csv
 data/fashion_mnist_test_vectors.csv
