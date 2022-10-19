@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./headers/math.h"
+#include "headers/utils.h"
 using namespace std;
 
 void Matrix::initAndClear()
@@ -27,13 +27,15 @@ void Matrix::add(double n)
 
 void Matrix::add(Matrix n)
 {
-    if (rows == n.rows && cols == n.cols) {
-        for (size_t i = 0; i < this->rows; i++)
+    if (rows != n.rows || cols != n.cols)
+    {
+        return;
+    }
+    for (size_t i = 0; i < this->rows; i++)
+    {
+        for (size_t j = 0; j < this->cols; j++)
         {
-            for (size_t j = 0; j < this->cols; j++)
-            {
-                this->matrix[i][j] += n.matrix[i][j];
-            }
+            this->matrix[i][j] += n.matrix[i][j];
         }
     }
 }
@@ -55,6 +57,7 @@ Matrix Matrix::multiply(Matrix n)
     if (this->cols != n.rows)
     {
         invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
+        return n;
     }
     auto *p = new Matrix(this->rows, n.cols);
     for (size_t i = 0; i < p->rows; i++)
@@ -101,6 +104,17 @@ void Matrix::printMatrix()
         cout << "\n";
     }
     cout << "\n";
+}
+
+void Matrix::map(double (*activation)(double sum))
+{
+    for (size_t i = 0; i < this->rows; i++)
+    {
+        for (size_t j = 0; j < this->cols; j++)
+        {
+            activation(this->matrix[i][j]);
+        }
+    }
 }
 
 // DEPRECATED

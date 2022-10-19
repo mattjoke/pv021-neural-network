@@ -1,7 +1,6 @@
 #include <iostream>
-#include "perceptron.cpp"
-#include "neural_network.cpp"
-#include "math.h"
+#include "headers/utils.h"
+#include "headers/layer.h"
 using namespace std;
 
 int main()
@@ -27,17 +26,23 @@ int main()
     // NeuralNetwork *n = new NeuralNetwork();
     Matrix *m = new Matrix(2, 3);
     m->add(+1);
-    m->printMatrix();
+    // m->printMatrix();
 
-    Matrix *n = new Matrix(3, 2);
+    Matrix *n = new Matrix(1, 2);
     n->randomise();
     n->printMatrix();
 
     n->transpose();
-    n->printMatrix();
+    // n->printMatrix();
 
     n->transpose();
-    n->printMatrix();
+    // n->printMatrix();
     // n->multiply(*m);
     // n->printMatrix();
+
+    Layer *l = new Layer(2, 3);
+    l->getWeights().printMatrix();
+    l->getBias().printMatrix();
+    *n = l->feedForward(*n);
+    n->printMatrix();
 }

@@ -2,6 +2,7 @@
 #define PV021_NEURAL_NETWORK_MATH_H
 
 #include <iostream>
+#include "activation.h"
 using namespace std;
 
 class Matrix
@@ -20,12 +21,18 @@ public:
         this->initAndClear();
     }
 
+    ~Matrix()
+    {
+        // free(this->matrix);
+    }
+
     void initAndClear();
     void add(double n);
     void transpose();
     void add(Matrix n);
     void multiply(double n);
     Matrix multiply(Matrix n);
+    void map(double (*activation)(double sum));
 
     void printMatrix();
 
