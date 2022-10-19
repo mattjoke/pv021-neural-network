@@ -39,9 +39,12 @@ int main()
     // n->printMatrix();
     // n->multiply(*m);
     // n->printMatrix();
-
+    cout << "input\n";
+    n->printMatrix();
     Layer *l = new Layer(2, 3);
+    cout << "weights\n";
     l->getWeights().printMatrix();
+    cout << "bias\n";
     l->getBias().printMatrix();
     *n = l->feedForward(*n);
     n->printMatrix();

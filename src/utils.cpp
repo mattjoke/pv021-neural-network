@@ -112,7 +112,7 @@ void Matrix::map(double (*activation)(double sum))
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            activation(this->matrix[i][j]);
+            this->matrix[i][j] = activation(this->matrix[i][j]);
         }
     }
 }

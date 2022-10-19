@@ -14,16 +14,16 @@ class Layer
 private:
     size_t percepts_below;
     size_t num_perceptrons;
-    Matrix weights = Matrix(percepts_below, num_perceptrons);
+    Matrix weights = Matrix(0,0);
     Matrix bias = Matrix(0, 0);
-    double (*activationFunction)(double sum) = *Activation::relu;
+    double (*activationFunction)(double sum) = Activation::logistic;
 
 public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons)
     {
         this->percepts_below = num_perceptrons_below;
         this->num_perceptrons = num_perceptrons;
-        this->weights = Matrix(num_perceptrons_below, num_perceptrons);
+        this->weights = Matrix(this->percepts_below, this->num_perceptrons);
         this->bias = Matrix(1, num_perceptrons);
         this->weights.randomise();
         this->bias.randomise();
