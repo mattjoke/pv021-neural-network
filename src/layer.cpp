@@ -5,7 +5,7 @@
 #include "headers/layer.h"
 using namespace std;
 
-Matrix Layer::feedForward(Matrix inputs)
+Matrix Layer::feedForward(Matrix inputs) const
 {
     inputs = (inputs.multiply(this->weights));
     inputs.add(this->bias);

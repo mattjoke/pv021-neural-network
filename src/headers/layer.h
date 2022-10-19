@@ -11,7 +11,7 @@ using namespace std;
 
 class Layer
 {
-private:
+public:
 
     size_t percepts_below;
     size_t num_perceptrons;
@@ -30,16 +30,16 @@ public:
         this->bias.randomise();
     }
 
-    Matrix feedForward(Matrix inputs);
+    Matrix feedForward(Matrix inputs) const;
     void setWeights(Matrix weights)
     {
         this->weights = weights;
     }
-    Matrix getWeights()
+    Matrix getWeights() const
     {
         return this->weights;
     }
-    Matrix getBias()
+    Matrix getBias() const
     {
         return this->bias;
     }

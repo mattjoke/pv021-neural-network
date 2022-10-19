@@ -72,7 +72,8 @@ Matrix Matrix::multiply(Matrix n)
                 //cout << this->matrix[i][k] << " " << n.matrix[k][j] << endl;
                 p->matrix[i][j] += this->matrix[i][k] * n.matrix[k][j];
             }
-            //cout << endl;        }
+            //cout << endl;
+        }
     }
     // why the next 3 lines?
     this->cols = p->cols;
