@@ -1,5 +1,6 @@
 #include <iostream>
-#include "./headers/utils.h"
+#include "headers/utils.h"
+
 using namespace std;
 
 void Matrix::initAndClear()
@@ -27,13 +28,16 @@ void Matrix::add(double n)
 
 void Matrix::add(Matrix n)
 {
-    if (rows == n.rows && cols == n.cols) {
-        for (size_t i = 0; i < this->rows; i++)
+    if (rows != n.rows || cols != n.cols)
+    {
+        return;
+    }
+    for (size_t i = 0; i < this->rows; i++)
+    {
+        for (size_t j = 0; j < this->cols; j++)
         {
-            for (size_t j = 0; j < this->cols; j++)
-            {
-                this->matrix[i][j] += n.matrix[i][j];
-            }
+            this->matrix[i][j] += n.matrix[i][j];
+
         }
     }
 }
@@ -56,6 +60,7 @@ Matrix Matrix::multiply(Matrix n)
     {
         invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
         return Matrix(0, 0);
+
     }
     auto *p = new Matrix(this->rows, n.cols);
     for (size_t i = 0; i < p->rows; i++)
@@ -67,8 +72,7 @@ Matrix Matrix::multiply(Matrix n)
                 //cout << this->matrix[i][k] << " " << n.matrix[k][j] << endl;
                 p->matrix[i][j] += this->matrix[i][k] * n.matrix[k][j];
             }
-            //cout << endl;
-        }
+            //cout << endl;        }
     }
     // why the next 3 lines?
     this->cols = p->cols;
@@ -106,6 +110,18 @@ void Matrix::printMatrix()
     cout << "\n";
 }
 
+void Matrix::map(double (*activation)(double sum))
+{
+    for (size_t i = 0; i < this->rows; i++)
+    {
+        for (size_t j = 0; j < this->cols; j++)
+        {
+            this->matrix[i][j] = activation(this->matrix[i][j]);
+        }
+    }
+}
+
+
 // DEPRECATED
 void Matrix::randomise()
 {
@@ -117,6 +133,7 @@ void Matrix::randomise()
         }
     }
 }
+
 
 double Matrix::at(int i, int j) {
     return this->matrix[i][j];

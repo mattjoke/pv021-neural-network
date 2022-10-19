@@ -1,7 +1,9 @@
-#ifndef PV021_NEURAL_NETWORK_UTILS_H
-#define PV021_NEURAL_NETWORK_UTILS_H
+#ifndef PV021_NEURAL_NETWORK_MATH_H
+#define PV021_NEURAL_NETWORK_MATH_H
 
 #include <iostream>
+#include "activation.h"
+
 #include <vector>
 
 using namespace std;
@@ -23,6 +25,11 @@ public:
         this->initAndClear();
     }
 
+    ~Matrix()
+    {
+        // free(this->matrix);
+    }
+
     double at(int i, int j);
     void set(int i, int j, double num);
     void initAndClear();
@@ -31,6 +38,8 @@ public:
     void add(Matrix n);
     void multiply(double n);
     Matrix multiply(Matrix n);
+    void map(double (*activation)(double sum));
+
 
     void printMatrix();
 
