@@ -8,4 +8,4 @@ include_directories(src/headers)
 add_executable(pv021_neural_network
         src/main.cpp
         src/utils.cpp
-        src/headers/layer.h src/layer.cpp)
+        src/layer.cpp)

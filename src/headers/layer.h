@@ -10,7 +10,7 @@
 using namespace std;
 
 class Layer {
-private:
+public:
     size_t percepts_below;
     size_t num_perceptrons;
     Matrix weights = Matrix(0, 0);
@@ -19,10 +19,10 @@ public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons) {
         this->percepts_below = num_perceptrons_below;
         this->num_perceptrons = num_perceptrons;
-        this->weights = Matrix(num_perceptrons, num_perceptrons_below);
+        this->weights = Matrix(num_perceptrons_below, num_perceptrons);
     }
 
-    Matrix getOutputs(Matrix inputs);
+    Matrix getOutputs(Matrix inputs) const;
 };
 
 

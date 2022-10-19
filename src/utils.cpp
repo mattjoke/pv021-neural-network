@@ -55,6 +55,7 @@ Matrix Matrix::multiply(Matrix n)
     if (this->cols != n.rows)
     {
         invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
+        return Matrix(0, 0);
     }
     auto *p = new Matrix(this->rows, n.cols);
     for (size_t i = 0; i < p->rows; i++)
@@ -63,10 +64,10 @@ Matrix Matrix::multiply(Matrix n)
         {
             for (size_t k = 0; k < this->cols; k++)
             {
-                cout << this->matrix[i][k] << " " << n.matrix[k][j] << endl;
+                //cout << this->matrix[i][k] << " " << n.matrix[k][j] << endl;
                 p->matrix[i][j] += this->matrix[i][k] * n.matrix[k][j];
             }
-            cout << endl;
+            //cout << endl;
         }
     }
     // why the next 3 lines?
@@ -115,4 +116,12 @@ void Matrix::randomise()
             this->matrix[i][j] = std::rand() % 10;
         }
     }
+}
+
+double Matrix::at(int i, int j) {
+    return this->matrix[i][j];
+}
+
+void Matrix::set(int i, int j, double num) {
+    this->matrix[i][j] = num;
 }
