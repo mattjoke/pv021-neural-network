@@ -12,7 +12,7 @@ int main()
     m->add(+1);
     // m->printMatrix();
 
-    Matrix *n = new Matrix(1, 2);
+    auto *n = new Matrix(1, 2);
 
     n->randomise();
     n->printMatrix();
@@ -26,7 +26,7 @@ int main()
     // n->printMatrix();
     cout << "input\n";
     n->printMatrix();
-    Layer *l = new Layer(2, 3);
+    auto *l = new Layer(2, 3);
     cout << "weights\n";
     l->getWeights().printMatrix();
     cout << "bias\n";
