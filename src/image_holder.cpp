@@ -73,3 +73,12 @@ bool ImageHolder::load_labels() {
 int ImageHolder::get_num_images() const {
     return num_images;
 }
+
+Matrix ImageHolder::get_image_as_matrix(int i) {
+    auto image = this->images[i];
+    auto matrixImage = Matrix(1, image.size());
+    for(int j=0; j< image.size(); j++) {
+        matrixImage.set(0, j, image[j]);
+    }
+    return matrixImage;
+}

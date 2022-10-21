@@ -6,6 +6,8 @@
 #define PV021_NEURAL_NETWORK_IMAGE_HOLDER_H
 #include <string>
 #include <vector>
+#include "utils.h"
+
 using namespace std;
 
 
@@ -20,6 +22,7 @@ public:
     bool load_labels();
 
     int get_num_images() const;
+    Matrix get_image_as_matrix(int i);
 
 private:
     int num_images;

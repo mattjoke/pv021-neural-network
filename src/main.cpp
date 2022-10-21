@@ -45,27 +45,25 @@ int main()
     n->printMatrix();
 
     cout << "-----" << endl;
-    auto *f = new Matrix(1, 3);
-    f->set(0, 0, 5);
-    f->set(0, 1, 2);
-    f->set(0, 2, 3);
-    f->printMatrix();
-    auto* first = new Layer(3, 2);
-    first->weights.set(0, 0, 1);
-    first->weights.set(0, 1, 1);
-    first->weights.set(1, 0, 1);
-    first->weights.set(1, 1, 1);
-    first->weights.set(2, 0, 1);
-    first->weights.set(2, 1, 1);
-    first->weights.printMatrix();
-    auto* second = new Layer(2, 1);
-    second->weights.set(0, 0, 1.5);
-    second->weights.set(1, 0, 2);
-    second->weights.printMatrix();
-    second->getOutputs(first->getOutputs(*f)).printMatrix();
 
-    string images_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\test_images.csv)";
-    string labels_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\test_labels.csv)";
+    string images_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\fashion_mnist_train_vectors.csv)";
+    string labels_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\fashion_mnist_train_labels.csv)";
     auto ih = new ImageHolder(images_path, labels_path);
     cout << ih->get_num_images() << endl;
+
+
+    auto f = ih->get_image_as_matrix(0);
+
+
+    auto* first = new Layer(784, 128);
+    cout << "bias:" << endl;
+    first->bias.printMatrix();
+
+
+    auto* second = new Layer(128, 10);
+    cout << "bias:" << endl;
+    second->bias.printMatrix();
+
+    second->feedForward(first->feedForward(f)).printMatrix();
+
 }
