@@ -10,4 +10,6 @@ add_executable(pv021_neural_network
         src/utils.cpp
         src/headers/activation.h
         src/headers/layer.h
-        src/layer.cpp)
+        src/layer.cpp
+        src/image_holder.cpp
+        src/headers/image_holder.h)

@@ -3,6 +3,7 @@
 #include "headers/layer.h"
 #include "perceptron.cpp"
 #include "neural_network.cpp"
+#include "image_holder.h"
 
 using namespace std;
 
@@ -62,4 +63,9 @@ int main()
     second->weights.set(1, 0, 2);
     second->weights.printMatrix();
     second->getOutputs(first->getOutputs(*f)).printMatrix();
+
+    string images_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\test_images.csv)";
+    string labels_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\test_labels.csv)";
+    auto ih = new ImageHolder(images_path, labels_path);
+    cout << ih->get_num_images() << endl;
 }
