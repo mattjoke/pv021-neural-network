@@ -23,13 +23,19 @@ public:
 
     int get_num_images() const;
     Matrix get_image_as_matrix(int i);
+    void compute_mean();
+    void compute_std_dev();
+    void standardize();
 
 private:
     int num_images;
-    vector<vector<int>> images;
+    vector<vector<double>> images;
     vector<int> labels;
     string images_path;
     string labels_path;
+    vector<double> mean;
+    vector<double> stddev;
+
 };
 
 
