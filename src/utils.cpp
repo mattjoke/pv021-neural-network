@@ -15,7 +15,7 @@ using namespace std;
 //    }
 //}
 
-vector<vector<double>> init_matrix(int rows, int cols) {
+vector<vector<double>> Matrix::init_matrix(int rows, int cols) {
     vector<vector<double>> vec(rows);
     for(int i=0; i <rows; i++) {
         vector<double> row(cols);
@@ -33,7 +33,7 @@ void Matrix::add(double n)
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            this->m[i][j] += n;
+            this->matrix[i][j] += n;
         }
     }
 }
@@ -48,7 +48,7 @@ void Matrix::add(Matrix n)
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            this->m[i][j] += n.m[i][j];
+            this->matrix[i][j] += n.matrix[i][j];
 
         }
     }
@@ -60,7 +60,7 @@ void Matrix::multiply(double n)
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            this->m[i][j] *= n;
+            this->matrix[i][j] *= n;
         }
     }
 }
@@ -82,7 +82,7 @@ Matrix Matrix::multiply(Matrix n)
             for (size_t k = 0; k < this->cols; k++)
             {
                 //cout << this->matrix[i][k] << " " << n.matrix[k][j] << endl;
-                p->m[i][j] += this->m[i][k] * n.m[k][j];
+                p->matrix[i][j] += this->matrix[i][k] * n.matrix[k][j];
             }
             //cout << endl;
         }
@@ -90,7 +90,7 @@ Matrix Matrix::multiply(Matrix n)
     // why the next 3 lines?
     this->cols = p->cols;
     this->rows = p->rows;
-    this->m = p->m;
+    this->matrix = p->matrix;
     return *p;
 }
 
@@ -101,12 +101,12 @@ void Matrix::transpose()
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            newMatrix->m[j][i] = this->m[i][j];
+            newMatrix->matrix[j][i] = this->matrix[i][j];
         }
     }
     this->cols = newMatrix->cols;
     this->rows = newMatrix->rows;
-    this->m = newMatrix->m;
+    this->matrix = newMatrix->matrix;
 }
 
 void Matrix::printMatrix()
@@ -116,7 +116,7 @@ void Matrix::printMatrix()
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            cout << "|" << this->m[i][j] << "\t";
+            cout << "|" << this->matrix[i][j] << "\t";
         }
         cout << "\n";
     }
@@ -129,7 +129,7 @@ void Matrix::map(double (*activation)(double sum))
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            this->m[i][j] = activation(this->m[i][j]);
+            this->matrix[i][j] = activation(this->matrix[i][j]);
         }
     }
 }
@@ -142,16 +142,16 @@ void Matrix::randomise()
     {
         for (size_t j = 0; j < this->cols; j++)
         {
-            this->m[i][j] = std::rand() % 10;
+            this->matrix[i][j] = std::rand() % 10;
         }
     }
 }
 
 
 double Matrix::at(int i, int j) {
-    return this->m[i][j];
+    return this->matrix[i][j];
 }
 
 void Matrix::set(int i, int j, double num) {
-    this->m[i][j] = num;
+    this->matrix[i][j] = num;
 }
