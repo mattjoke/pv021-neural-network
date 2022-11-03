@@ -11,7 +11,7 @@ public:
     static double tanh(double sum);
     static double relu(double sum);
 
-    static void parseActivationFunction(string activation, double (**activationFunction)(double sum));
+    static void parseActivationFunction(const string& activation, double (**activationFunction)(double sum));
 };
 
 #endif
