@@ -1,7 +1,4 @@
-#include <iostream>
-#include <algorithm>
-#include <cmath>
-#include "headers/activation.h"
+#include "activation.h"
 using namespace std;
 
 double Activation::identity(double sum)

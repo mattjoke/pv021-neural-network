@@ -5,7 +5,7 @@
 #ifndef PV021_NEURAL_NETWORK_LAYER_H
 #define PV021_NEURAL_NETWORK_LAYER_H
 
-#include "utils.h"
+#include "matrix.h"
 #include "activation.h"
 using namespace std;
 
@@ -31,21 +31,12 @@ public:
     }
 
     Matrix feedForward(Matrix inputs) const;
-    void setWeights(Matrix weights)
-    {
-        this->weights = weights;
-    }
-    Matrix getWeights() const
-    {
-        return this->weights;
-    }
-    Matrix getBias() const
-    {
-        return this->bias;
-    }
+    Matrix getWeights() const;
+    void setWeights(Matrix weights);
+    Matrix getBias() const;
+    void setBias(Matrix bias);
 
-    Matrix getOutputs(Matrix inputs) const;
-
+    void printInformation() const;
 };
 
 #endif // PV021_NEURAL_NETWORK_LAYER_H

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "headers/utils.h"
+#include "headers/matrix.h"
 
 using namespace std;
 
@@ -17,9 +17,9 @@ using namespace std;
 
 vector<vector<double>> Matrix::init_matrix(int rows, int cols) {
     vector<vector<double>> vec(rows);
-    for(int i=0; i <rows; i++) {
+    for (int i = 0; i < rows; i++) {
         vector<double> row(cols);
-        for(int j=0; j<cols; j++) {
+        for (int j = 0; j < cols; j++) {
             row[j] = 0;
         }
         vec[i] = row;
@@ -27,60 +27,44 @@ vector<vector<double>> Matrix::init_matrix(int rows, int cols) {
     return vec;
 }
 
-void Matrix::add(double n)
-{
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
+void Matrix::add(double n) {
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] += n;
         }
     }
 }
 
-void Matrix::add(Matrix n)
-{
-    if (rows != n.rows || cols != n.cols)
-    {
+void Matrix::add(Matrix n) {
+    if (rows != n.rows || cols != n.cols) {
         return;
     }
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] += n.matrix[i][j];
 
         }
     }
 }
 
-void Matrix::multiply(double n)
-{
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
+void Matrix::multiply(double n) {
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] *= n;
         }
     }
 }
 
 // A.K.A. Cross-Product
-Matrix Matrix::multiply(Matrix n)
-{
-    if (this->cols != n.rows)
-    {
+Matrix Matrix::multiply(Matrix n) {
+    if (this->cols != n.rows) {
         invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
         return Matrix(0, 0);
-
     }
     auto *p = new Matrix(this->rows, n.cols);
-    for (size_t i = 0; i < p->rows; i++)
-    {
-        for (size_t j = 0; j < p->cols; j++)
-        {
-            for (size_t k = 0; k < this->cols; k++)
-            {
+    for (size_t i = 0; i < p->rows; i++) {
+        for (size_t j = 0; j < p->cols; j++) {
+            for (size_t k = 0; k < this->cols; k++) {
                 //cout << this->matrix[i][k] << " " << n.matrix[k][j] << endl;
                 p->matrix[i][j] += this->matrix[i][k] * n.matrix[k][j];
             }
@@ -94,13 +78,10 @@ Matrix Matrix::multiply(Matrix n)
     return *p;
 }
 
-void Matrix::transpose()
-{
+void Matrix::transpose() {
     auto *newMatrix = new Matrix(this->cols, this->rows);
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
             newMatrix->matrix[j][i] = this->matrix[i][j];
         }
     }
@@ -109,13 +90,10 @@ void Matrix::transpose()
     this->matrix = newMatrix->matrix;
 }
 
-void Matrix::printMatrix()
-{
+void Matrix::printMatrix() const {
     cout << "Matrix with the size: (" << this->rows << "," << this->cols << ")\n";
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
             cout << "|" << this->matrix[i][j] << "\t";
         }
         cout << "\n";
@@ -123,12 +101,9 @@ void Matrix::printMatrix()
     cout << "\n";
 }
 
-void Matrix::map(double (*activation)(double sum))
-{
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
+void Matrix::map(double (*activation)(double sum)) {
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] = activation(this->matrix[i][j]);
         }
     }
@@ -136,12 +111,9 @@ void Matrix::map(double (*activation)(double sum))
 
 
 // DEPRECATED
-void Matrix::randomise()
-{
-    for (size_t i = 0; i < this->rows; i++)
-    {
-        for (size_t j = 0; j < this->cols; j++)
-        {
+void Matrix::randomise() {
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] = std::rand() % 10;
         }
     }
