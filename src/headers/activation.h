@@ -1,6 +1,9 @@
 #ifndef PV021_NEURAL_NETWORK_ACTIVATION_H
 #define PV021_NEURAL_NETWORK_ACTIVATION_H
 
+#include <iostream>
+#include <algorithm>
+#include <cmath>
 using namespace std;
 
 class Activation

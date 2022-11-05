@@ -7,9 +7,11 @@ include_directories(src/headers)
 
 add_executable(pv021_neural_network
         src/main.cpp
-        src/utils.cpp
-        src/headers/activation.h
+        src/matrix.cpp
+        src/activation.cpp
         src/headers/layer.h
         src/layer.cpp
         src/image_holder.cpp
-        src/headers/image_holder.h)
+        src/headers/image_holder.h
+        src/headers/neural_network.h
+        src/headers/utils.h)

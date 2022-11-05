@@ -1,6 +1,6 @@
 #include <iostream>
-#include "headers/utils.h"
-#include "headers/layer.h"
+#include "matrix.h"
+#include "layer.h"
 #include "perceptron.cpp"
 #include "neural_network.cpp"
 #include "image_holder.h"
@@ -9,6 +9,15 @@ using namespace std;
 
 int main()
 {
+    // Create a neural network with 2 inputs, 1 output and 1 hidden layer with 2 neurons
+    // NeuralNetwork nn(2, 1, {2,3,4,5,6,7});
+    // nn.printData();
+
+    auto nn = NeuralNetwork(1,2,{2,2});
+    nn.printData();
+    return 0;
+
+
     auto *m = new Matrix(2, 3);
     m->add(+1);
     // matrix->printMatrix();
@@ -46,8 +55,8 @@ int main()
 
     cout << "-----" << endl;
 
-    string images_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\fashion_mnist_train_vectors.csv)";
-    string labels_path = R"(D:\MUNI\FI\_mgr\semester_1\PV021_neural_networks\pv021-neural-network\data\fashion_mnist_train_labels.csv)";
+    string images_path = R"(../data/fashion_mnist_test_vectors.csv)";
+    string labels_path = R"(../data/fashion_mnist_test_labels.csv)";
     auto ih = new ImageHolder(images_path, labels_path);
     cout << ih->get_num_images() << endl;
 

@@ -6,10 +6,9 @@
 #define PV021_NEURAL_NETWORK_IMAGE_HOLDER_H
 #include <string>
 #include <vector>
-#include "utils.h"
+#include "matrix.h"
 
 using namespace std;
-
 
 
 class ImageHolder {

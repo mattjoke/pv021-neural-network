@@ -19,6 +19,13 @@ ImageHolder::ImageHolder(string images_path, string labels_path) {
 bool ImageHolder::load_images() {
     auto outputStringStream = ostringstream{};
     ifstream input_file(images_path);
+    // Checks if file exists, otherwise it throws SIGTERM
+    if (input_file.fail()){
+        cout << "Failed to open file: " << images_path << endl;
+        return false;
+    }
+
+
     if (!input_file.is_open()) {
         return false;
     }
@@ -50,6 +57,12 @@ bool ImageHolder::load_images() {
 bool ImageHolder::load_labels() {
     auto outputStringStream = ostringstream{};
     ifstream input_file(labels_path);
+    // Checks if file exists, otherwise it throws SIGTERM
+    if (input_file.fail()){
+        cout << "Failed to open file: " << images_path << endl;
+        return false;
+    }
+
     if (!input_file.is_open()) {
         return false;
     }

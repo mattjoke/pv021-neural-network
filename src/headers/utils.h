@@ -1,54 +1,18 @@
-#ifndef PV021_NEURAL_NETWORK_MATH_H
-#define PV021_NEURAL_NETWORK_MATH_H
+//
+// Created by Matej Hakoš on 11/4/2022.
+//
 
-#include <iostream>
-#include "activation.h"
+#ifndef PV021_NEURAL_NETWORK_UTILS_H
+#define PV021_NEURAL_NETWORK_UTILS_H
 
-#include <vector>
+#include "matrix.h"
 
-using namespace std;
-
-
-
-class Matrix
-{
-private:
-    size_t cols;
-    size_t rows;
-    //double **matrix;
-    std::vector<std::vector<double>> matrix;
-
-public:
-    Matrix(size_t rows, size_t cols)
-    {
-        this->cols = cols;
-        this->rows = rows;
-        this->matrix = init_matrix(rows, cols);
-        //this->initAndClear();
+Matrix convertVectorToMatrix(vector<double> vec) {
+    Matrix m(vec.size(), 1);
+    for (int i = 0; i < vec.size(); i++) {
+        m.set(i, 0, vec[i]);
     }
+    return m;
+}
 
-    ~Matrix()
-    {
-        // free(this->matrix);
-    }
-
-    vector<vector<double>> init_matrix(int rows, int cols);
-
-    double at(int i, int j);
-    void set(int i, int j, double num);
-    //void initAndClear();
-    void add(double n);
-    void transpose();
-    void add(Matrix n);
-    void multiply(double n);
-    Matrix multiply(Matrix n);
-    void map(double (*activation)(double sum));
-
-
-    void printMatrix();
-
-    // DEPRECATED
-    void randomise();
-};
-
-#endif
+#endif //PV021_NEURAL_NETWORK_UTILS_H
