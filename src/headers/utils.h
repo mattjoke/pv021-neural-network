@@ -8,7 +8,7 @@
 
 using namespace std;
 
-vector<vector<double>> init_matrix(int rows, int cols);
+
 
 class Matrix
 {
@@ -16,14 +16,14 @@ private:
     size_t cols;
     size_t rows;
     //double **matrix;
-    std::vector<std::vector<double>> m;
+    std::vector<std::vector<double>> matrix;
 
 public:
     Matrix(size_t rows, size_t cols)
     {
         this->cols = cols;
         this->rows = rows;
-        this->m = init_matrix(rows, cols);
+        this->matrix = init_matrix(rows, cols);
         //this->initAndClear();
     }
 
@@ -31,6 +31,8 @@ public:
     {
         // free(this->matrix);
     }
+
+    vector<vector<double>> init_matrix(int rows, int cols);
 
     double at(int i, int j);
     void set(int i, int j, double num);

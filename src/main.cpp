@@ -11,7 +11,7 @@ int main()
 {
     auto *m = new Matrix(2, 3);
     m->add(+1);
-    // m->printMatrix();
+    // matrix->printMatrix();
 
     auto *n = new Matrix(1, 2);
 
@@ -23,7 +23,7 @@ int main()
 
     n->transpose();
     // n->printMatrix();
-    // n->multiply(*m);
+    // n->multiply(*matrix);
     // n->printMatrix();
     cout << "input\n";
     n->printMatrix();
@@ -38,7 +38,7 @@ int main()
     // Oto
     m->printMatrix();
     n->printMatrix();
-    // n->multiply(*m);
+    // n->multiply(*matrix);
     // n->printMatrix();
     m->multiply(*n);
     m->printMatrix();

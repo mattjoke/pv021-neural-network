@@ -17,13 +17,13 @@ ImageHolder::ImageHolder(string images_path, string labels_path) {
 }
 
 bool ImageHolder::load_images() {
-    auto ss = ostringstream{};
+    auto outputStringStream = ostringstream{};
     ifstream input_file(images_path);
     if (!input_file.is_open()) {
         return false;
     }
-    ss << input_file.rdbuf();
-    string file_content = ss.str();
+    outputStringStream << input_file.rdbuf();
+    string file_content = outputStringStream.str();
     vector<double> image{};
     int num = 0;
     for(char letter : file_content) {
@@ -48,13 +48,13 @@ bool ImageHolder::load_images() {
 }
 
 bool ImageHolder::load_labels() {
-    auto ss = ostringstream{};
+    auto outputStringStream = ostringstream{};
     ifstream input_file(labels_path);
     if (!input_file.is_open()) {
         return false;
     }
-    ss << input_file.rdbuf();
-    string file_content = ss.str();
+    outputStringStream << input_file.rdbuf();
+    string file_content = outputStringStream.str();
     int label = 0;
     int num = 0;
     for(char letter : file_content) {
@@ -86,31 +86,31 @@ Matrix ImageHolder::get_image_as_matrix(int i) {
 
 void ImageHolder::compute_mean() {
     int image_size = this->images[0].size();
-    vector<double> m(image_size);
+    vector<double> means(image_size);
     for(int i=0; i<num_images; i++) {
         for(int j=0; j<image_size; j++) {
-            m[j] += images[i][j];
+            means[j] += images[i][j];
         }
     }
     for(int j=0; j<image_size; j++) {
-        m[j] = m[j] / num_images;
+        means[j] = means[j] / num_images;
     }
-    mean = m;
+    this->mean = means;
 }
 
 void ImageHolder::compute_std_dev() {
     int image_size = this->images[0].size();
-    vector<double> m(image_size);
+    vector<double> standardDeviation(image_size);
     for(int i=0; i<num_images; i++) {
         for(int j=0; j<image_size; j++) {
             double v = images[i][j];
-            m[j] += ((v - mean[j]) * (v - mean[j]));
+            standardDeviation[j] += ((v - mean[j]) * (v - mean[j]));
         }
     }
     for(int j=0; j<image_size; j++) {
-        m[j] = m[j] / num_images;
+        standardDeviation[j] = standardDeviation[j] / num_images;
     }
-    stddev = m;
+    stddev = standardDeviation;
 }
 
 void ImageHolder::standardize() {
