@@ -62,6 +62,7 @@ public:
 
     unsigned long long int getRows() const;
     size_t getCols() const;
+    void printInfo() const;
 
     // DEPRECATED
     void randomise();

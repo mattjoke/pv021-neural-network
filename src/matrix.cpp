@@ -163,3 +163,7 @@ unsigned long long int Matrix::getRows() const {
 size_t Matrix::getCols() const {
     return cols;
 }
+
+void Matrix::printInfo() const {
+    cout << this->rows << " " << this->cols << endl;
+};
