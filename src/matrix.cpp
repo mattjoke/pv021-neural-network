@@ -157,5 +157,9 @@ Matrix Matrix::hadamard(Matrix n) {
 }
 
 unsigned long long int Matrix::getRows() const {
-    return this->rows;
+    return rows;
+}
+
+size_t Matrix::getCols() const {
+    return cols;
 }

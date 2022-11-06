@@ -12,6 +12,10 @@ using namespace std;
 class Matrix {
 private:
     size_t cols;
+public:
+    size_t getCols() const;
+
+private:
     size_t rows;
     //double **matrix;
     std::vector<std::vector<double>> matrix;

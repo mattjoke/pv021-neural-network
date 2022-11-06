@@ -16,6 +16,7 @@ class Layer {
 public:
 
     size_t perceptrons_below;
+    Matrix outputs_from_weighted_sum = Matrix(0, 0);
     // Neurons in this layer
     Matrix neurons = Matrix(0, 0);
     // Incoming weights to this layer
@@ -30,6 +31,7 @@ public:
         this->perceptrons_below = num_perceptrons_below;
         this->weights = Matrix(this->perceptrons_below, num_perceptrons);
         this->neurons = Matrix(num_perceptrons, 1);
+        this->outputs_from_weighted_sum = Matrix(num_perceptrons, 1);
         this->bias = Matrix(num_perceptrons_below, 1);
 
         // Randomize weights and bias

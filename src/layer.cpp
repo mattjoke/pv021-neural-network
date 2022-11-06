@@ -9,10 +9,9 @@ using namespace std;
 Matrix Layer::feedForward(Matrix inputs) {
     cout << "inputs change\n";
     this->neurons = inputs.transpose();
-    inputs.multiply(this->weights);
-    inputs.add(this->bias);
-    inputs.mapSelf(this->activationFunction.function);
-    return inputs;
+    outputs_from_weighted_sum = inputs.multiply(this->weights);
+    outputs_from_weighted_sum.add(this->bias);
+    return outputs_from_weighted_sum.map(this->activationFunction.function);
 }
 
 void Layer::setWeights(Matrix weights) {
