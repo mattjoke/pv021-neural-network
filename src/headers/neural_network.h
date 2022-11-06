@@ -22,12 +22,15 @@ private:
     size_t numberOfHiddenLayers;
     vector<size_t> hiddenLayerSizes;
 
+    // Learning rate
+    double learningRate = 0.1;
+
 
     //Network data
     vector<Layer> network;
 
     // Activation function (default: 'relu')
-    double (*activationFunction)(double sum);
+    ActivationFunction activationFunction;
     // Solver function
     double (*solverFunction)(double sum);
 
@@ -38,18 +41,24 @@ public:
         this->outputLayerSize = outputLayerSize;
         this->hiddenLayerSizes = hiddenLayerSizes;
         this->numberOfHiddenLayers = hiddenLayerSizes.size();
-        this->activationFunction = Activation::relu;
+        this->activationFunction = Activation::relu();
 
         buildNetwork();
     }
 
     void buildNetwork();
     Matrix feedForward(const vector<double>& input);
+    void train(const vector<double>& inputs, const vector<double>& targets);
     void setActivationFunction(const string& activation = "relu");
     void setInputLayerSize(size_t size);
     void setOutputLayerSize(size_t size);
     void setNumberOfHiddenLayers(size_t size);
     void printData();
+
+
+    static Matrix costDerivative(Matrix outputActivations, const Matrix& y) {
+        return outputActivations.sub(y);
+    }
 };
 
 

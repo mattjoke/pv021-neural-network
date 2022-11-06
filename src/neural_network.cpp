@@ -1,7 +1,7 @@
 #include "neural_network.h"
 
 void NeuralNetwork::setActivationFunction(const std::string &activation) {
-    Activation::parseActivationFunction(activation, &(this->activationFunction));
+    this->activationFunction = Activation::parseActivationFunction(activation);
 }
 
 void NeuralNetwork::setInputLayerSize(size_t size) {
@@ -49,7 +49,7 @@ void NeuralNetwork::buildNetwork() {
     auto inputLayer = Layer(this->inputLayerSize, this->hiddenLayerSizes[0]);
     this->network.emplace_back(inputLayer);
     // Create other hidden layers
-    for (int i = 0; i < this->numberOfHiddenLayers-1; ++i) {
+    for (int i = 1; i < this->numberOfHiddenLayers - 1; ++i) {
         auto hiddenLayer = Layer(this->hiddenLayerSizes[i], this->hiddenLayerSizes[i + 1]);
         this->network.emplace_back(hiddenLayer);
     }
@@ -60,14 +60,50 @@ void NeuralNetwork::buildNetwork() {
 
 Matrix NeuralNetwork::feedForward(const vector<double> &input) {
     // Check if the input is the same size
-    if (input.size() != this->inputLayerSize){
+    if (input.size() != this->inputLayerSize) {
         cout << "The input is not correct, not forwarding further" << endl;
         return {0, 0};
     }
 
     Matrix buffer = convertVectorToMatrix(input);
-    for (auto & i : this->network) {
+    for (auto &i: this->network) {
         buffer = i.feedForward(buffer);
     }
     return buffer;
 }
+
+void NeuralNetwork::train(const vector<double> &inputs, const vector<double> &targets) {
+    // Check if the input is the same size
+    if (inputs.size() != this->inputLayerSize) {
+        cout << "The input is not correct, not forwarding further" << endl;
+        return;
+    }
+    // Check if the target is the same size
+    if (targets.size() != this->outputLayerSize) {
+        cout << "The target is not correct, not forwarding further" << endl;
+        return;
+    }
+
+    // Feed forward
+    Matrix ff = feedForward(inputs);
+    Matrix target = convertVectorToMatrix(targets);
+
+    // Cost derivative
+    Matrix zL = this->network[this->network.size() - 1].getNeurons().map(this->activationFunction.derivative);
+    Matrix cost = zL.multiply(costDerivative(ff, target));
+
+
+    // Backpropagation
+    for (int i = this->network.size() - 2; i >= 0; i--) {
+        auto helper = (this->network[i+1].getWeights().transpose()).multiply(cost);
+        auto s = this->network[i].getNeurons().map(this->activationFunction.derivative);
+        cost = helper.transpose().multiply(s);
+
+        // Update weights and biases
+        this->network[i].updateBias(cost);
+        this->network[i].updateWeights(this->network[i].getNeurons().multiply(cost.transpose()));
+    }
+}
+
+
+

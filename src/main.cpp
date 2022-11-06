@@ -7,15 +7,34 @@
 
 using namespace std;
 
-int main()
-{
+int main() {
     // Create a neural network with 2 inputs, 1 output and 1 hidden layer with 2 neurons
     // NeuralNetwork nn(2, 1, {2,3,4,5,6,7});
     // nn.printData();
 
-    auto nn = NeuralNetwork(1,2,{2,2});
-    nn.printData();
+    auto nn = NeuralNetwork(2, 1, {2});
+    for (int i = 0; i < 1000; ++i) {
+        nn.train({1, 1}, {0});
+        nn.train({1, 0}, {1});
+        nn.train({0, 0}, {0});
+        nn.train({0, 1}, {1});
+    }
+
+    cout << "1, 1 -> " <<  endl;
+    nn.feedForward({1,1}).printMatrix();
+    cout << "1, 0 -> " <<  endl;
+    nn.feedForward({1,0}).printMatrix();
+    cout << "0, 0 -> " <<  endl;
+    nn.feedForward({0,0}).printMatrix();
+    cout << "0, 1 -> " <<  endl;
+    nn.feedForward({0,1}).printMatrix();
+
     return 0;
+    while (1) {
+
+        nn.feedForward({0, 0}).printMatrix();
+    }
+
 
 
     auto *m = new Matrix(2, 3);
@@ -43,7 +62,7 @@ int main()
     l->getBias().printMatrix();
     *n = l->feedForward(*n);
     n->printMatrix();
-    
+
     // Oto
     m->printMatrix();
     n->printMatrix();
@@ -64,12 +83,12 @@ int main()
     auto f = ih->get_image_as_matrix(0);
 
 
-    auto* first = new Layer(784, 128);
+    auto *first = new Layer(784, 128);
     cout << "bias:" << endl;
     first->bias.printMatrix();
 
 
-    auto* second = new Layer(128, 10);
+    auto *second = new Layer(128, 10);
     cout << "bias:" << endl;
     second->bias.printMatrix();
 
