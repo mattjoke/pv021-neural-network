@@ -48,3 +48,7 @@ cout << "Layer information:" << endl;
     cout << "Bias:" << endl;
     this->bias.printMatrix();
 }
+
+Matrix Layer::getOutputsFromWeightedSum() const {
+    return outputs_from_weighted_sum;
+}

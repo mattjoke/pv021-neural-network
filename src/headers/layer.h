@@ -61,6 +61,8 @@ public:
         return this->neurons;
     }
 
+    Matrix getOutputsFromWeightedSum() const;
+
     ActivationFunction getActivationFunction() const {
         return this->activationFunction;
     }

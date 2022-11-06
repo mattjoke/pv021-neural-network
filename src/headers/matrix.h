@@ -12,8 +12,6 @@ using namespace std;
 class Matrix {
 private:
     size_t cols;
-public:
-    size_t getCols() const;
 
 private:
     size_t rows;
@@ -63,6 +61,7 @@ public:
     void printMatrix() const;
 
     unsigned long long int getRows() const;
+    size_t getCols() const;
 
     // DEPRECATED
     void randomise();

@@ -89,7 +89,7 @@ void NeuralNetwork::train(const vector<double> &inputs, const vector<double> &ta
     Matrix target = convertVectorToMatrix(targets);
 
     // Cost derivative
-    Matrix zL = this->network[this->network.size() - 1].getNeurons().map(this->activationFunction.derivative);
+    Matrix zL = this->network[this->network.size() - 1].getOutputsFromWeightedSum().map(this->activationFunction.derivative);
     Matrix cost = zL.multiply(costDerivative(ff, target));
 
 
