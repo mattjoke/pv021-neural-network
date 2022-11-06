@@ -37,6 +37,7 @@ void Matrix::add(double n) {
 
 void Matrix::add(Matrix n) {
     if (rows != n.rows || cols != n.cols) {
+        throw invalid_argument("Matrices must have the same dimensions, Matrix ADD");
         return;
     }
     for (size_t i = 0; i < this->rows; i++) {
@@ -48,7 +49,7 @@ void Matrix::add(Matrix n) {
 
 Matrix Matrix::sub(Matrix n) {
     if (rows != n.rows || cols != n.cols) {
-        throw "Matrix dimensions must match";
+        throw invalid_argument("Matrix dimensions must match");
         return {0, 0};
     }
     Matrix result = Matrix(rows, cols);
@@ -71,7 +72,7 @@ void Matrix::multiply(double n) {
 
 // A.K.A. Cross-Product
 Matrix Matrix::multiply(Matrix n) {
-    if (this->cols != n.rows && this->rows != n.cols) {
+    if (this->cols != n.rows) {
         cout << "Columns of A must match rows of B." << endl;
         cout << "A: " << this->rows << "x" << this->cols << endl;
         cout << "B: " << n.rows << "x" << n.cols << endl;
@@ -153,9 +154,19 @@ void Matrix::set(int i, int j, double num) {
 }
 
 Matrix Matrix::hadamard(Matrix n) {
-    return this->multiply(n.transpose());
+    // Element-wise multiplication
+    if (this->rows != n.rows || this->cols != n.cols) {
+        throw invalid_argument("Matrices must have the same dimensions, Matrix HADAMARD");
+    }
+    Matrix result = Matrix(this->rows, this->cols);
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
+            result.matrix[i][j] = this->matrix[i][j] * n.matrix[i][j];
+        }
+    }
+    return result;
 }
 
-unsigned long long int Matrix::getRows() const {
+size_t Matrix::getRows() const {
     return this->rows;
 }

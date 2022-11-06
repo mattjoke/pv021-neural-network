@@ -40,8 +40,9 @@ void NeuralNetwork::printData() {
 void NeuralNetwork::buildNetwork() {
     this->network.clear();
     if (this->numberOfHiddenLayers == 0) {
-        std::cout << "No hidden layers! The input neurons are directly connected to output!" << std::endl;
-        this->network.emplace_back(this->inputLayerSize, this->outputLayerSize);
+        std::cout << "No hidden layers! The input weightedSums are directly connected to output!" << std::endl;
+        Layer l = Layer(this->inputLayerSize, this->outputLayerSize);
+        this->network.emplace_back(l);
         return;
     }
 
@@ -49,7 +50,7 @@ void NeuralNetwork::buildNetwork() {
     auto inputLayer = Layer(this->inputLayerSize, this->hiddenLayerSizes[0]);
     this->network.emplace_back(inputLayer);
     // Create other hidden layers
-    for (int i = 1; i < this->numberOfHiddenLayers - 1; ++i) {
+    for (int i = 0; i < this->numberOfHiddenLayers - 1; ++i) {
         auto hiddenLayer = Layer(this->hiddenLayerSizes[i], this->hiddenLayerSizes[i + 1]);
         this->network.emplace_back(hiddenLayer);
     }
@@ -75,35 +76,56 @@ Matrix NeuralNetwork::feedForward(const vector<double> &input) {
 void NeuralNetwork::train(const vector<double> &inputs, const vector<double> &targets) {
     // Check if the input is the same size
     if (inputs.size() != this->inputLayerSize) {
-        cout << "The input is not correct, not forwarding further" << endl;
-        return;
+        throw invalid_argument("The input is not correct, not forwarding further");
     }
     // Check if the target is the same size
     if (targets.size() != this->outputLayerSize) {
-        cout << "The target is not correct, not forwarding further" << endl;
-        return;
+        throw invalid_argument("Target is not correct, not forwarding further");
     }
 
     // Feed forward
     Matrix ff = feedForward(inputs);
     Matrix target = convertVectorToMatrix(targets);
+    Matrix input = convertVectorToMatrix(inputs);
 
     // Cost derivative
-    Matrix zL = this->network[this->network.size() - 1].getNeurons().map(this->activationFunction.derivative);
-    Matrix cost = zL.multiply(costDerivative(ff, target));
+    Matrix zL = this->network[this->network.size() - 1].getWeightedSums().map(this->activationFunction.derivative);
+    Matrix cost = costDerivative(ff, target).hadamard(zL);
 
+    // Cross entropy cost
+
+
+    // Update weights and bias
+    this->network[this->network.size() - 1].updateBias(cost);
+    if (this->network.size() == 1) {
+        auto t = input.map(this->activationFunction.function).transpose();
+        this->network[this->network.size() - 1].updateWeights(t.multiply(cost));
+        return;
+    }
+    auto o = this->network[this->network.size() - 2].getWeightedSums().map(this->activationFunction.function);
+    this->network[this->network.size() - 1].updateWeights(o.transpose().multiply(cost));
 
     // Backpropagation
     for (int i = this->network.size() - 2; i >= 0; i--) {
-        auto helper = (this->network[i+1].getWeights().transpose()).multiply(cost);
-        auto s = this->network[i].getNeurons().map(this->activationFunction.derivative);
-        cost = helper.transpose().multiply(s);
+        Matrix sp = this->network[i].getWeightedSums().map(this->activationFunction.derivative);
+        Matrix delta = cost.multiply(this->network[i + 1].getWeights().transpose());
+        cost = delta.hadamard(sp);
 
         // Update weights and biases
         this->network[i].updateBias(cost);
-        this->network[i].updateWeights(this->network[i].getNeurons().multiply(cost.transpose()));
+        if (i == 0) {
+            auto t = input.map(this->activationFunction.function).transpose();
+            this->network[i].updateWeights(t.multiply(cost));
+            return;
+        } else {
+            this->network[i].updateWeights(this->network[i - 1].getWeightedSums().map(
+                    this->activationFunction.function).transpose().multiply(cost));
+        }
     }
 }
 
-
+void NeuralNetwork::predict(const vector<double> &input) {
+    Matrix ff = feedForward(input);
+    ff.printMatrix();
+}
 

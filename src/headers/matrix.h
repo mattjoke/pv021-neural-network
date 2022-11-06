@@ -27,10 +27,6 @@ public:
         //this->initAndClear();
     }
 
-    ~Matrix() {
-        // free(this->matrix);
-    }
-
     vector<vector<double>> init_matrix(int rows, int cols);
 
     double at(int i, int j);
@@ -56,9 +52,9 @@ public:
 
     Matrix map(double (*activation)(double sum));
 
-    void printMatrix() const;
+    size_t getRows() const;
 
-    unsigned long long int getRows() const;
+    void printMatrix() const;
 
     // DEPRECATED
     void randomise();

@@ -8,26 +8,16 @@
 using namespace std;
 
 int main() {
-    // Create a neural network with 2 inputs, 1 output and 1 hidden layer with 2 neurons
-    // NeuralNetwork nn(2, 1, {2,3,4,5,6,7});
-    // nn.printData();
-
-    auto nn = NeuralNetwork(2, 1, {2});
-    for (int i = 0; i < 1000; ++i) {
-        nn.train({1, 1}, {0});
+    auto nn = NeuralNetwork(2, 1, {});
+    for (int i = 0; i < 100; ++i) {
         nn.train({1, 0}, {1});
+        nn.train({1, 1}, {0});
         nn.train({0, 0}, {0});
         nn.train({0, 1}, {1});
     }
 
-    cout << "1, 1 -> " <<  endl;
-    nn.feedForward({1,1}).printMatrix();
-    cout << "1, 0 -> " <<  endl;
-    nn.feedForward({1,0}).printMatrix();
-    cout << "0, 0 -> " <<  endl;
-    nn.feedForward({0,0}).printMatrix();
-    cout << "0, 1 -> " <<  endl;
-    nn.feedForward({0,1}).printMatrix();
+    cout << "Test" << endl;
+    nn.predict({1, 0});
 
     return 0;
     while (1) {

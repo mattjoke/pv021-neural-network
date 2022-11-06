@@ -17,7 +17,7 @@ public:
 
     size_t perceptrons_below;
     // Neurons in this layer
-    Matrix neurons = Matrix(0, 0);
+    Matrix weightedSums = Matrix(0, 0);
     // Incoming weights to this layer
     Matrix weights = Matrix(0, 0);
     // Bias for this layer
@@ -29,8 +29,9 @@ public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons) {
         this->perceptrons_below = num_perceptrons_below;
         this->weights = Matrix(this->perceptrons_below, num_perceptrons);
-        this->neurons = Matrix(num_perceptrons, 1);
-        this->bias = Matrix(num_perceptrons_below, 1);
+
+        this->weightedSums = Matrix(num_perceptrons, 1);
+        this->bias = Matrix(1, num_perceptrons);
 
         // Randomize weights and bias
         this->weights.randomise();
@@ -47,16 +48,16 @@ public:
 
     void setBias(Matrix bias);
 
-    void updateBias(Matrix bias);
+    void updateBias(Matrix cost);
 
-    void updateWeights(Matrix weights);
+    void updateWeights(Matrix cost);
 
-    void setNeurons(Matrix neurons) {
-        this->neurons = neurons;
+    void getWeightedSums(Matrix neurons) {
+        this->weightedSums = neurons;
     }
 
-    Matrix getNeurons() const {
-        return this->neurons;
+    Matrix getWeightedSums() const {
+        return this->weightedSums;
     }
 
     ActivationFunction getActivationFunction() const {

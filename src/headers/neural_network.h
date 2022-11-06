@@ -23,7 +23,7 @@ private:
     vector<size_t> hiddenLayerSizes;
 
     // Learning rate
-    double learningRate = 0.1;
+    double learningRate = 0.15;
 
 
     //Network data
@@ -49,6 +49,7 @@ public:
     void buildNetwork();
     Matrix feedForward(const vector<double>& input);
     void train(const vector<double>& inputs, const vector<double>& targets);
+    void predict(const vector<double>& inputs);
     void setActivationFunction(const string& activation = "relu");
     void setInputLayerSize(size_t size);
     void setOutputLayerSize(size_t size);
