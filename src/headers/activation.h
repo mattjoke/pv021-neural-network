@@ -6,15 +6,20 @@
 #include <cmath>
 using namespace std;
 
+struct ActivationFunction {
+    double (*function)(double sum);
+    double (*derivative)(double sum);
+};
+
 class Activation
 {
 public:
-    static double identity(double sum);
-    static double logistic(double sum);
-    static double tanh(double sum);
-    static double relu(double sum);
+    static ActivationFunction identity();
+    static ActivationFunction logistic();
+    static ActivationFunction tanh();
+    static ActivationFunction relu();
 
-    static void parseActivationFunction(const string& activation, double (**activationFunction)(double sum));
+    static ActivationFunction parseActivationFunction(const string& activation);
 };
 
 #endif

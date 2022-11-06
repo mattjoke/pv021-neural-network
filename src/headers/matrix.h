@@ -40,17 +40,25 @@ public:
     //void initAndClear();
     void add(double n);
 
-    void transpose();
+    Matrix transpose();
 
     void add(Matrix n);
+
+    Matrix sub(Matrix n);
 
     void multiply(double n);
 
     Matrix multiply(Matrix n);
 
-    void map(double (*activation)(double sum));
+    Matrix hadamard(Matrix n);
+
+    void mapSelf(double (*activation)(double sum));
+
+    Matrix map(double (*activation)(double sum));
 
     void printMatrix() const;
+
+    unsigned long long int getRows() const;
 
     // DEPRECATED
     void randomise();

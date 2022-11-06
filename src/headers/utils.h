@@ -8,9 +8,9 @@
 #include "matrix.h"
 
 Matrix convertVectorToMatrix(vector<double> vec) {
-    Matrix m(vec.size(), 1);
+    Matrix m(1, vec.size());
     for (int i = 0; i < vec.size(); i++) {
-        m.set(i, 0, vec[i]);
+        m.set(0, i, vec[i]);
     }
     return m;
 }

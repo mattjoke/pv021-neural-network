@@ -42,10 +42,24 @@ void Matrix::add(Matrix n) {
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] += n.matrix[i][j];
-
         }
     }
 }
+
+Matrix Matrix::sub(Matrix n) {
+    if (rows != n.rows || cols != n.cols) {
+        throw "Matrix dimensions must match";
+        return {0, 0};
+    }
+    Matrix result = Matrix(rows, cols);
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
+            result.matrix[i][j] = this->matrix[i][j] - n.matrix[i][j];
+        }
+    }
+    return result;
+}
+
 
 void Matrix::multiply(double n) {
     for (size_t i = 0; i < this->rows; i++) {
@@ -57,9 +71,11 @@ void Matrix::multiply(double n) {
 
 // A.K.A. Cross-Product
 Matrix Matrix::multiply(Matrix n) {
-    if (this->cols != n.rows) {
-        invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
-        return Matrix(0, 0);
+    if (this->cols != n.rows && this->rows != n.cols) {
+        cout << "Columns of A must match rows of B." << endl;
+        cout << "A: " << this->rows << "x" << this->cols << endl;
+        cout << "B: " << n.rows << "x" << n.cols << endl;
+        throw invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
     }
     auto *p = new Matrix(this->rows, n.cols);
     for (size_t i = 0; i < p->rows; i++) {
@@ -78,16 +94,14 @@ Matrix Matrix::multiply(Matrix n) {
     return *p;
 }
 
-void Matrix::transpose() {
-    auto *newMatrix = new Matrix(this->cols, this->rows);
+Matrix Matrix::transpose() {
+    auto newMatrix = Matrix(this->cols, this->rows);
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            newMatrix->matrix[j][i] = this->matrix[i][j];
+            newMatrix.matrix[j][i] = this->matrix[i][j];
         }
     }
-    this->cols = newMatrix->cols;
-    this->rows = newMatrix->rows;
-    this->matrix = newMatrix->matrix;
+    return newMatrix;
 }
 
 void Matrix::printMatrix() const {
@@ -101,7 +115,7 @@ void Matrix::printMatrix() const {
     cout << "\n";
 }
 
-void Matrix::map(double (*activation)(double sum)) {
+void Matrix::mapSelf(double (*activation)(double sum)) {
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] = activation(this->matrix[i][j]);
@@ -109,12 +123,22 @@ void Matrix::map(double (*activation)(double sum)) {
     }
 }
 
+Matrix Matrix::map(double (*activation)(double sum)) {
+    Matrix result = Matrix(this->rows, this->cols);
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
+            result.matrix[i][j] = activation(this->matrix[i][j]);
+        }
+    }
+    return result;
+}
+
 
 // DEPRECATED
 void Matrix::randomise() {
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            this->matrix[i][j] = std::rand() % 10;
+            this->matrix[i][j] =  1; // std::rand() % 10;
         }
     }
 }
@@ -126,4 +150,12 @@ double Matrix::at(int i, int j) {
 
 void Matrix::set(int i, int j, double num) {
     this->matrix[i][j] = num;
+}
+
+Matrix Matrix::hadamard(Matrix n) {
+    return this->multiply(n.transpose());
+}
+
+unsigned long long int Matrix::getRows() const {
+    return this->rows;
 }

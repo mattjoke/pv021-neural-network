@@ -6,10 +6,12 @@
 
 using namespace std;
 
-Matrix Layer::feedForward(Matrix inputs) const {
-    inputs = (inputs.multiply(this->weights));
+Matrix Layer::feedForward(Matrix inputs) {
+    cout << "inputs change\n";
+    this->neurons = inputs.transpose();
+    inputs.multiply(this->weights);
     inputs.add(this->bias);
-    inputs.map(this->activationFunction);
+    inputs.mapSelf(this->activationFunction.function);
     return inputs;
 }
 
@@ -29,10 +31,19 @@ void Layer::setBias(Matrix bias) {
     this->bias = bias;
 }
 
+void Layer::updateBias(Matrix bias) {
+    this->bias = bias;
+}
+
+void Layer::updateWeights(Matrix cost) {
+    // Matrix c = cost.transpose();
+    this->weights = cost.multiply(this->neurons.transpose());
+}
+
 void Layer::printInformation() const {
 cout << "Layer information:" << endl;
-    cout << "Number of perceptrons below: " << this->percepts_below << endl;
-    cout << "Number of perceptrons: " << this->num_perceptrons << endl;
+    cout << "Number of perceptrons below: " << this->perceptrons_below << endl;
+    cout << "Number of perceptrons: " << this->neurons.getRows() << endl;
     cout << "Weights:" << endl;
     this->weights.printMatrix();
     cout << "Bias:" << endl;
