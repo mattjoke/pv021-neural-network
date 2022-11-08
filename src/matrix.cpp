@@ -49,8 +49,7 @@ void Matrix::add(Matrix n) {
 
 Matrix Matrix::sub(Matrix n) {
     if (rows != n.rows || cols != n.cols) {
-        throw invalid_argument("Matrix dimensions must match");
-        return {0, 0};
+        throw invalid_argument("Matrix dimensions must match, Matrix SUB");
     }
     Matrix result = Matrix(rows, cols);
     for (size_t i = 0; i < this->rows; i++) {
@@ -116,19 +115,20 @@ void Matrix::printMatrix() const {
     cout << "\n";
 }
 
-void Matrix::mapSelf(double (*activation)(double sum)) {
+void Matrix::mapSelf(double (*activation)(double sum, double wholeSum)) {
+    double expSum = this->map([](double sum, double wholeSum) { return exp(sum); }).sum();
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            this->matrix[i][j] = activation(this->matrix[i][j]);
+            this->matrix[i][j] = activation(this->matrix[i][j], expSum);
         }
     }
 }
 
-Matrix Matrix::map(double (*activation)(double sum)) {
+Matrix Matrix::map(double (*activation)(double sum, double wholeSum)) {
     Matrix result = Matrix(this->rows, this->cols);
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            result.matrix[i][j] = activation(this->matrix[i][j]);
+            result.matrix[i][j] = activation(this->matrix[i][j], 1);
         }
     }
     return result;
@@ -139,7 +139,7 @@ Matrix Matrix::map(double (*activation)(double sum)) {
 void Matrix::randomise() {
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            this->matrix[i][j] =  1; // std::rand() % 10;
+            this->matrix[i][j] = 1; // std::rand() % 10;
         }
     }
 }
@@ -169,4 +169,19 @@ Matrix Matrix::hadamard(Matrix n) {
 
 size_t Matrix::getRows() const {
     return this->rows;
+}
+
+
+size_t Matrix::getCols() const {
+    return this->cols;
+}
+
+double Matrix::sum() {
+    double result = 0;
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
+            result += this->matrix[i][j];
+        }
+    }
+    return result;
 }

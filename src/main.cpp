@@ -8,23 +8,25 @@
 using namespace std;
 
 int main() {
-    auto nn = NeuralNetwork(2, 1, {});
-    for (int i = 0; i < 100; ++i) {
-        nn.train({1, 0}, {1});
-        nn.train({1, 1}, {0});
-        nn.train({0, 0}, {0});
-        nn.train({0, 1}, {1});
-    }
+    auto nn = NeuralNetwork(2, 1, {3});
 
-    cout << "Test" << endl;
-    nn.predict({1, 0});
+    vector<vector<double>> dataset = {{0, 0},
+                                      {0, 1},
+                                      {1, 0},
+                                      {1, 1}};
+    vector<vector<double>> targets = {{0},
+                                      {1},
+                                      {1},
+                                      {0}};
+
+    while(true) {
+        // First output is 1 second is 0
+        nn.train(dataset, targets);
+        auto predicted = nn.predict(dataset);
+        nn.accuracy(targets, predicted);
+    }
 
     return 0;
-    while (1) {
-
-        nn.feedForward({0, 0}).printMatrix();
-    }
-
 
 
     auto *m = new Matrix(2, 3);

@@ -22,8 +22,8 @@ public:
     Matrix weights = Matrix(0, 0);
     // Bias for this layer
     Matrix bias = Matrix(0, 0);
-    // Activation function for this layer (default: 'logistic')
-    ActivationFunction activationFunction = Activation::logistic();
+    // Activation function for this layer (default: 'relu')
+    ActivationFunction activationFunction = Activation::relu();
 
 public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons) {

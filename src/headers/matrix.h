@@ -48,11 +48,14 @@ public:
 
     Matrix hadamard(Matrix n);
 
-    void mapSelf(double (*activation)(double sum));
+    void mapSelf(double (*activation)(double sum, double wholeSum));
 
-    Matrix map(double (*activation)(double sum));
+    Matrix map(double (*activation)(double sum, double wholeSum));
+
+    double sum();
 
     size_t getRows() const;
+    size_t getCols() const;
 
     void printMatrix() const;
 

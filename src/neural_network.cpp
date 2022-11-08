@@ -42,6 +42,7 @@ void NeuralNetwork::buildNetwork() {
     if (this->numberOfHiddenLayers == 0) {
         std::cout << "No hidden layers! The input weightedSums are directly connected to output!" << std::endl;
         Layer l = Layer(this->inputLayerSize, this->outputLayerSize);
+        l.activationFunction = Activation::softmax();
         this->network.emplace_back(l);
         return;
     }
@@ -56,6 +57,7 @@ void NeuralNetwork::buildNetwork() {
     }
     // Last hidden layer -> output layer
     auto outputLayer = Layer(this->hiddenLayerSizes[this->numberOfHiddenLayers - 1], this->outputLayerSize);
+    outputLayer.activationFunction = Activation::softmax();
     this->network.emplace_back(outputLayer);
 }
 
@@ -73,7 +75,7 @@ Matrix NeuralNetwork::feedForward(const vector<double> &input) {
     return buffer;
 }
 
-void NeuralNetwork::train(const vector<double> &inputs, const vector<double> &targets) {
+void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<double> &targets) {
     // Check if the input is the same size
     if (inputs.size() != this->inputLayerSize) {
         throw invalid_argument("The input is not correct, not forwarding further");
@@ -89,11 +91,9 @@ void NeuralNetwork::train(const vector<double> &inputs, const vector<double> &ta
     Matrix input = convertVectorToMatrix(inputs);
 
     // Cost derivative
-    Matrix zL = this->network[this->network.size() - 1].getWeightedSums().map(this->activationFunction.derivative);
+    Matrix zL = this->network[this->network.size() - 1].getWeightedSums();
+    zL.mapSelf(this->activationFunction.derivative);
     Matrix cost = costDerivative(ff, target).hadamard(zL);
-
-    // Cross entropy cost
-
 
     // Update weights and bias
     this->network[this->network.size() - 1].updateBias(cost);
@@ -124,8 +124,36 @@ void NeuralNetwork::train(const vector<double> &inputs, const vector<double> &ta
     }
 }
 
-void NeuralNetwork::predict(const vector<double> &input) {
-    Matrix ff = feedForward(input);
-    ff.printMatrix();
+vector<vector<double>> NeuralNetwork::predict(const vector<vector<double>> &inputs) {
+    vector<vector<double>> outputs;
+    for (auto &i: inputs) {
+        Matrix prediction = predict(i);
+        vector<double> output;
+        for (int j = 0; j < prediction.getCols(); ++j) {
+            output.emplace_back(prediction.at(0, j));
+        }
+        outputs.emplace_back(output);
+    }
+    return outputs;
 }
 
+Matrix NeuralNetwork::predict(const vector<double> &input) {
+    return feedForward(input);
+}
+
+void NeuralNetwork::train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets) {
+    for (int i = 0; i < inputs.size(); ++i) {
+        backPropagation(inputs[i], targets[i]);
+    }
+}
+
+void NeuralNetwork::accuracy(const vector<vector<double>> &inputs, const vector<vector<double>> &targets) {
+    int correct = 0;
+    for (int i = 0; i < inputs.size(); ++i) {
+        Matrix difference = convertVectorToMatrix(inputs[i]).sub(convertVectorToMatrix(targets[i]));
+        if (abs(difference.sum()) <= 0.000000000001) {
+            correct++;
+        }
+    }
+    cout << "Accuracy: " << (double) correct / inputs.size() << endl;
+}
