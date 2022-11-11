@@ -49,11 +49,11 @@ ActivationFunction Activation::relu() {
 /*
 ActivationFunction Activation::softmax() {
     ActivationFunction softmax{};
-    softmax.function = [](double sum, double wholeSum) {
-        return exp(sum) / wholeSum;
+    softmax.function = [](double sum) {
+        return exp(sum);
     };
-    softmax.derivative = [](double sum, double wholeSum) {
-        return exp(sum) * (wholeSum - exp(sum));
+    softmax.derivative = [](double sum) {
+        return exp(sum);
     };
     return softmax;
 }

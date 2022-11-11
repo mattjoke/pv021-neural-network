@@ -32,8 +32,10 @@ int main() {
             nn.accuracy(predictions, targets);
         }
     }
+    cout << "-------------------" << endl;
 
 
+    /*
     // nn.printData();
     // auto predictions = nn.predict(dataset);
     // nn.accuracy(predictions, targets);
@@ -96,4 +98,5 @@ int main() {
 
     second->feedForward(first->feedForward(f)).printMatrix();
 
+     */
 }

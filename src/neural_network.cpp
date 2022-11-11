@@ -149,6 +149,25 @@ void NeuralNetwork::train(const vector<vector<double>> &inputs, const vector<vec
     }
 }
 
+int getIndexOfHighestValue(const vector<double> input) {
+    int index = 0;
+    for (int i = 0; i < input.size(); i++) {
+        if (input[i] > input[index]) {
+            index = i;
+        }
+    }
+    return index;
+}
+
+vector<double> vectorHighestValue(const vector<double> input) {
+    int category = getIndexOfHighestValue(input);
+    vector<double> output;
+    for (int i = 0; i < input.size(); ++i) {
+        output.emplace_back((double) i == category);
+    }
+    return output;
+}
+
 void NeuralNetwork::accuracy(const vector<vector<double>> &inputs, const vector<vector<double>> &targets) {
     if (inputs.size() != targets.size()) {
         throw invalid_argument("NeuralNetwork::accuracy -> The number of inputs and targets are not the same!");
@@ -158,8 +177,13 @@ void NeuralNetwork::accuracy(const vector<vector<double>> &inputs, const vector<
         auto resultCategory = vectorHighestValue(inputs[i]);
         if (resultCategory == targets[i]) {
             correct++;
+        } else {
+            cout << inputs[i][0] << " " << inputs[i][1] << endl;
+            cout << targets[i][0] << " " << targets[i][1] << endl;
+            cout <<"------"<<endl;
         }
     }
     cout << "Accuracy: " << (double) correct / inputs.size() << endl;
     cout << "Correct: " << correct << "/" << inputs.size() << endl;
 }
+
