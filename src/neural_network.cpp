@@ -42,7 +42,7 @@ void NeuralNetwork::buildNetwork() {
     if (this->numberOfHiddenLayers == 0) {
         std::cout << "No hidden layers! The input weightedSums are directly connected to output!" << std::endl;
         Layer l = Layer(this->inputLayerSize, this->outputLayerSize);
-        l.activationFunction = Activation::softmax();
+        // l.activationFunction = Activation::softmax();
         this->network.emplace_back(l);
         return;
     }
@@ -57,15 +57,14 @@ void NeuralNetwork::buildNetwork() {
     }
     // Last hidden layer -> output layer
     auto outputLayer = Layer(this->hiddenLayerSizes[this->numberOfHiddenLayers - 1], this->outputLayerSize);
-    outputLayer.activationFunction = Activation::softmax();
+    //outputLayer.activationFunction = Activation::softmax();
     this->network.emplace_back(outputLayer);
 }
 
 Matrix NeuralNetwork::feedForward(const vector<double> &input) {
     // Check if the input is the same size
     if (input.size() != this->inputLayerSize) {
-        cout << "The input is not correct, not forwarding further" << endl;
-        return {0, 0};
+        throw invalid_argument("NeuralNetwork::feedForward -> Input size is not the same as the input layer size!");
     }
 
     Matrix buffer = convertVectorToMatrix(input);
@@ -78,11 +77,11 @@ Matrix NeuralNetwork::feedForward(const vector<double> &input) {
 void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<double> &targets) {
     // Check if the input is the same size
     if (inputs.size() != this->inputLayerSize) {
-        throw invalid_argument("The input is not correct, not forwarding further");
+        throw invalid_argument("NeuralNetwork::backPropagation -> The input is not correct, not forwarding further");
     }
     // Check if the target is the same size
     if (targets.size() != this->outputLayerSize) {
-        throw invalid_argument("Target is not correct, not forwarding further");
+        throw invalid_argument("NeuralNetwork::backPropagation -> Target is not correct, not forwarding further");
     }
 
     // Feed forward
@@ -142,18 +141,25 @@ Matrix NeuralNetwork::predict(const vector<double> &input) {
 }
 
 void NeuralNetwork::train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets) {
+    if (inputs.size() != targets.size()) {
+        throw invalid_argument("NeuralNetwork::train -> The number of inputs and targets are not the same!");
+    }
     for (int i = 0; i < inputs.size(); ++i) {
         backPropagation(inputs[i], targets[i]);
     }
 }
 
 void NeuralNetwork::accuracy(const vector<vector<double>> &inputs, const vector<vector<double>> &targets) {
+    if (inputs.size() != targets.size()) {
+        throw invalid_argument("NeuralNetwork::accuracy -> The number of inputs and targets are not the same!");
+    }
     int correct = 0;
     for (int i = 0; i < inputs.size(); ++i) {
-        Matrix difference = convertVectorToMatrix(inputs[i]).sub(convertVectorToMatrix(targets[i]));
-        if (abs(difference.sum()) <= 0.000000000001) {
+        auto resultCategory = vectorHighestValue(inputs[i]);
+        if (resultCategory == targets[i]) {
             correct++;
         }
     }
     cout << "Accuracy: " << (double) correct / inputs.size() << endl;
+    cout << "Correct: " << correct << "/" << inputs.size() << endl;
 }

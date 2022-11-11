@@ -9,6 +9,7 @@
 
 #include "matrix.h"
 #include "activation.h"
+#include "initialisation.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ public:
     // Bias for this layer
     Matrix bias = Matrix(0, 0);
     // Activation function for this layer (default: 'relu')
-    ActivationFunction activationFunction = Activation::relu();
+    ActivationFunction activationFunction = Activation::logistic();
 
 public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons) {
@@ -34,8 +35,9 @@ public:
         this->bias = Matrix(1, num_perceptrons);
 
         // Randomize weights and bias
-        this->weights.randomise();
-        this->bias.randomise();
+        Initialisation::he(2.0 / sqrt(this->perceptrons_below), &this->weights);
+        Initialisation::zero(&this->bias);
+        this->bias.add(0.001);
     }
 
     Matrix feedForward(Matrix inputs);

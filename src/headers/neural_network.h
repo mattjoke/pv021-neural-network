@@ -32,9 +32,6 @@ private:
     // Activation function (default: 'relu')
     ActivationFunction activationFunction;
 
-    // Solver function
-    double (*solverFunction)(double sum);
-
 public:
     NeuralNetwork(size_t inputLayerSize, size_t outputLayerSize, const vector<size_t> &hiddenLayerSizes) {
         this->inputLayerSize = inputLayerSize;
@@ -58,7 +55,7 @@ public:
 
     vector<vector<double>> predict(const vector<vector<double>> &inputs);
 
-    static void accuracy(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
+   static void accuracy(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
 
     void setActivationFunction(const string &activation = "relu");
 
@@ -69,7 +66,6 @@ public:
     void setNumberOfHiddenLayers(size_t size);
 
     void printData();
-
 
     static Matrix costDerivative(Matrix outputActivations, const Matrix &y) {
         return outputActivations.sub(y);

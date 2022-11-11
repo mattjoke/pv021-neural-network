@@ -37,8 +37,7 @@ void Matrix::add(double n) {
 
 void Matrix::add(Matrix n) {
     if (rows != n.rows || cols != n.cols) {
-        throw invalid_argument("Matrices must have the same dimensions, Matrix ADD");
-        return;
+        throw invalid_argument("Matrix::add -> Matrices must have the same dimensions");
     }
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
@@ -49,7 +48,7 @@ void Matrix::add(Matrix n) {
 
 Matrix Matrix::sub(Matrix n) {
     if (rows != n.rows || cols != n.cols) {
-        throw invalid_argument("Matrix dimensions must match, Matrix SUB");
+        throw invalid_argument("Matrix::sub -> Matrix dimensions must match");
     }
     Matrix result = Matrix(rows, cols);
     for (size_t i = 0; i < this->rows; i++) {
@@ -72,10 +71,8 @@ void Matrix::multiply(double n) {
 // A.K.A. Cross-Product
 Matrix Matrix::multiply(Matrix n) {
     if (this->cols != n.rows) {
-        cout << "Columns of A must match rows of B." << endl;
-        cout << "A: " << this->rows << "x" << this->cols << endl;
-        cout << "B: " << n.rows << "x" << n.cols << endl;
-        throw invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
+        throw invalid_argument(
+                "Matrix::multiply -> Left Matrix should have the same rows as the columns in the Right Matrix");
     }
     auto *p = new Matrix(this->rows, n.cols);
     for (size_t i = 0; i < p->rows; i++) {
@@ -115,35 +112,24 @@ void Matrix::printMatrix() const {
     cout << "\n";
 }
 
-void Matrix::mapSelf(double (*activation)(double sum, double wholeSum)) {
-    double expSum = this->map([](double sum, double wholeSum) { return exp(sum); }).sum();
+void Matrix::mapSelf(double (*activation)(double sum)) {
+    double expSum = this->map([](double sum) { return exp(sum); }).sum();
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            this->matrix[i][j] = activation(this->matrix[i][j], expSum);
+            this->matrix[i][j] = activation(this->matrix[i][j]);
         }
     }
 }
 
-Matrix Matrix::map(double (*activation)(double sum, double wholeSum)) {
+Matrix Matrix::map(double (*activation)(double sum)) {
     Matrix result = Matrix(this->rows, this->cols);
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            result.matrix[i][j] = activation(this->matrix[i][j], 1);
+            result.matrix[i][j] = activation(this->matrix[i][j]);
         }
     }
     return result;
 }
-
-
-// DEPRECATED
-void Matrix::randomise() {
-    for (size_t i = 0; i < this->rows; i++) {
-        for (size_t j = 0; j < this->cols; j++) {
-            this->matrix[i][j] = 1; // std::rand() % 10;
-        }
-    }
-}
-
 
 double Matrix::at(int i, int j) {
     return this->matrix[i][j];
@@ -156,7 +142,7 @@ void Matrix::set(int i, int j, double num) {
 Matrix Matrix::hadamard(Matrix n) {
     // Element-wise multiplication
     if (this->rows != n.rows || this->cols != n.cols) {
-        throw invalid_argument("Matrices must have the same dimensions, Matrix HADAMARD");
+        throw invalid_argument("Matrix::hadamard -> Matrices must have the same dimensions, Matrix HADAMARD");
     }
     Matrix result = Matrix(this->rows, this->cols);
     for (size_t i = 0; i < this->rows; i++) {
@@ -170,7 +156,6 @@ Matrix Matrix::hadamard(Matrix n) {
 size_t Matrix::getRows() const {
     return this->rows;
 }
-
 
 size_t Matrix::getCols() const {
     return this->cols;

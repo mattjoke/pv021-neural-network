@@ -7,8 +7,8 @@
 using namespace std;
 
 struct ActivationFunction {
-    double (*function)(double sum, double wholeSum);
-    double (*derivative)(double sum, double wholeSum);
+    double (*function)(double sum);
+    double (*derivative)(double sum);
 };
 
 class Activation
@@ -19,7 +19,7 @@ public:
     static ActivationFunction tanh();
     static ActivationFunction relu();
 
-    static ActivationFunction softmax();
+    // static ActivationFunction softmax();
 
     static ActivationFunction parseActivationFunction(const string& activation);
 };

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 #include "matrix.h"
 #include "layer.h"
 #include "perceptron.cpp"
@@ -8,24 +9,34 @@
 using namespace std;
 
 int main() {
-    auto nn = NeuralNetwork(2, 1, {3});
+    auto nn = NeuralNetwork(2, 2, {3});
 
     vector<vector<double>> dataset = {{0, 0},
                                       {0, 1},
                                       {1, 0},
                                       {1, 1}};
-    vector<vector<double>> targets = {{0},
-                                      {1},
-                                      {1},
-                                      {0}};
+    // First column is 1, second column is 0
+    vector<vector<double>> targets = {{0, 1}, // 0
+                                      {1, 0}, // 1
+                                      {1, 0}, // 1
+                                      {0, 1}}; // 0
 
-    while(true) {
+    // nn.printData();
+    for (int i = 0; i < 10000; ++i) {
         // First output is 1 second is 0
         nn.train(dataset, targets);
-        auto predicted = nn.predict(dataset);
-        nn.accuracy(targets, predicted);
+
+        if (i % 1000 == 100) {
+            cout << "Epoch: " << i << endl;
+            auto predictions = nn.predict(dataset);
+            nn.accuracy(predictions, targets);
+        }
     }
 
+
+    // nn.printData();
+    // auto predictions = nn.predict(dataset);
+    // nn.accuracy(predictions, targets);
     return 0;
 
 
@@ -35,7 +46,6 @@ int main() {
 
     auto *n = new Matrix(1, 2);
 
-    n->randomise();
     n->printMatrix();
 
     n->transpose();

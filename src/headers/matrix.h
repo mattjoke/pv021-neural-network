@@ -48,9 +48,9 @@ public:
 
     Matrix hadamard(Matrix n);
 
-    void mapSelf(double (*activation)(double sum, double wholeSum));
+    void mapSelf(double (*activation)(double sum));
 
-    Matrix map(double (*activation)(double sum, double wholeSum));
+    Matrix map(double (*activation)(double sum));
 
     double sum();
 
@@ -58,9 +58,6 @@ public:
     size_t getCols() const;
 
     void printMatrix() const;
-
-    // DEPRECATED
-    void randomise();
 };
 
 #endif
