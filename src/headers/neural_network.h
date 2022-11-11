@@ -45,7 +45,7 @@ public:
 
     void buildNetwork();
 
-    Matrix feedForward(const vector<double> &input);
+    vector<double> feedForward(const vector<double> &input);
 
     void backPropagation(const vector<double> &inputs, const vector<double> &targets);
 
@@ -67,8 +67,12 @@ public:
 
     void printData();
 
-    static Matrix costDerivative(Matrix outputActivations, const Matrix &y) {
-        return outputActivations.sub(y);
+    static vector<double> costDerivative(vector<double> outputActivations, const vector<double> &y) {
+        vector<double> result = {};
+        for (int i=0; i<outputActivations.size(); i++) {
+            result.emplace_back(outputActivations[i] - y[i]);
+        }
+        return result;
     }
 };
 

@@ -12,11 +12,11 @@ class Initialisation {
 public:
     std::mt19937 gen;
 public:
-    static void xavier(double favAvg, Matrix *weights);
-    static void he(double favIn, Matrix *weights);
-    static void leCun(double favIn, Matrix *weights);
-    static void zero(Matrix *weights);
-    static void one(Matrix *weights);
+    static void xavier(double favAvg, vector<vector<double>> *weights);
+    static void he(double favIn, vector<vector<double>> *weights);
+    static void leCun(double favIn, vector<vector<double>> *weights);
+    static void zero(vector<vector<double>> *weights);
+    static void one(vector<vector<double>> *weights);
 };
 
 

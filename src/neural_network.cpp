@@ -61,13 +61,14 @@ void NeuralNetwork::buildNetwork() {
     this->network.emplace_back(outputLayer);
 }
 
-Matrix NeuralNetwork::feedForward(const vector<double> &input) {
+vector<double> NeuralNetwork::feedForward(const vector<double> &input) {
     // Check if the input is the same size
     if (input.size() != this->inputLayerSize) {
         throw invalid_argument("NeuralNetwork::feedForward -> Input size is not the same as the input layer size!");
     }
 
-    Matrix buffer = convertVectorToMatrix(input);
+    //Matrix buffer = convertVectorToMatrix(input);
+    vector<double> buffer = input;
     for (auto &i: this->network) {
         buffer = i.feedForward(buffer);
     }
@@ -85,40 +86,80 @@ void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<d
     }
 
     // Feed forward
-    Matrix ff = feedForward(inputs);
-    Matrix target = convertVectorToMatrix(targets);
-    Matrix input = convertVectorToMatrix(inputs);
+    vector<double> ff = feedForward(inputs);
 
     // Cost derivative
-    Matrix zL = this->network[this->network.size() - 1].getWeightedSums();
-    zL.mapSelf(this->activationFunction.derivative);
-    Matrix cost = costDerivative(ff, target).hadamard(zL);
+    vector<double> zL = network[network.size() - 1].getWeightedSums();
+    for (int i=0; i<zL.size(); i++) {
+        zL[i] = activationFunction.derivative(zL[i]);
+    }
+    vector<double> cost = costDerivative(ff, targets);
+    for (int i=0; i<cost.size(); i++) {
+        cost[i] = cost[i] * zL[i];
+    }
 
     // Update weights and bias
-    this->network[this->network.size() - 1].updateBias(cost);
-    if (this->network.size() == 1) {
-        auto t = input.map(this->activationFunction.function).transpose();
-        this->network[this->network.size() - 1].updateWeights(t.multiply(cost));
+    network[network.size() - 1].updateBias(cost);
+    if (network.size() == 1) {
+        vector<double> t = {};
+        for (int i=0; i<inputs.size(); i++) {
+            t.emplace_back(activationFunction.function(inputs[i]));
+        }
+        for (int i=0; i<network[network.size() - 1].weights.size(); i++) {
+            for (int j=0; j<network[network.size() - 1].weights[0].size(); j++) {
+                network[network.size() - 1].weights[i][j] -= t[i] * 0.1 * cost[j];
+            }
+        }
         return;
     }
-    auto o = this->network[this->network.size() - 2].getWeightedSums().map(this->activationFunction.function);
-    this->network[this->network.size() - 1].updateWeights(o.transpose().multiply(cost));
+
+    vector<double> o = {};
+    for (int i=0; i<this->network[network.size() - 2].weightedSums.size(); i++) {
+        o.emplace_back(activationFunction.function(network[network.size() - 2].weightedSums[i]));
+    }
+    for (int i=0; i<network[network.size() - 1].weights.size(); i++) {
+        for (int j=0; j<network[network.size() - 1].weights[0].size(); j++) {
+            this->network[network.size() - 1].weights[i][j] -= o[i] * 0.1 * cost[j];
+        }
+    }
 
     // Backpropagation
     for (int i = this->network.size() - 2; i >= 0; i--) {
-        Matrix sp = this->network[i].getWeightedSums().map(this->activationFunction.derivative);
-        Matrix delta = cost.multiply(this->network[i + 1].getWeights().transpose());
-        cost = delta.hadamard(sp);
+        vector<double> sp = {};
+        for (int j=0; j<network[i].weightedSums.size(); j++) {
+            sp.emplace_back(activationFunction.derivative(network[i].weightedSums[j]));
+        }
+        vector<double> delta = {};
+        for(int j=0; j<cost.size(); j++) {
+            double num = 0;
+            for (int k=0; k<network[i+1].weights[0].size(); k++) {
+                num += cost[j] * network[i+1].weights[j][k];
+            }
+            delta.emplace_back(num);
+        }
+        cost = {};
+        for (int j=0; j<delta.size(); j++) {
+            cost.emplace_back(delta[j] * sp[j]);
+        }
 
         // Update weights and biases
         this->network[i].updateBias(cost);
         if (i == 0) {
-            auto t = input.map(this->activationFunction.function).transpose();
-            this->network[i].updateWeights(t.multiply(cost));
+            vector<double> t = {};
+            for (int j=0; j<inputs.size(); j++) {
+                t.emplace_back(activationFunction.function(inputs[i]));
+            }
+
+            for (int j=0; j<network[network.size() - 1].weights.size(); j++) {
+                for (int k=0; k<network[network.size() - 1].weights[0].size(); k++) {
+                    network[network.size() - 1].weights[j][k] -= t[j] * 0.1 * cost[k];
+                }
+            }
             return;
         } else {
-            this->network[i].updateWeights(this->network[i - 1].getWeightedSums().map(
-                    this->activationFunction.function).transpose().multiply(cost));
+            // todo watch the materials
+            network[i].updateWeights(network[i - 1].getWeightedSums().map(
+                    activationFunction.function).transpose().multiply(cost));
         }
     }
 }

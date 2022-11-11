@@ -6,36 +6,44 @@
 
 using namespace std;
 
-Matrix Layer::feedForward(Matrix inputs) {
-    inputs.multiply(this->weights);
-    inputs.add(this->bias);
-    this->weightedSums = inputs;
-    inputs.mapSelf(this->activationFunction.function);
+vector<double> Layer::feedForward(vector<double> inputs) {
+    for (int i=0; i<weights.size(); i++) {
+        weightedSums[i] = 0;
+        for (int j=0; j < weights[0].size(); j++) {
+            weightedSums[i] += weights[i][j] * inputs[j];
+        }
+        weightedSums[i] += bias[i];
+    }
+
+    for (int i=0; i<inputs.size(); i++) {
+        inputs[i] = this->activationFunction.function(weightedSums[i]);
+    }
     return inputs;
 }
 
-void Layer::setWeights(Matrix weights) {
+void Layer::setWeights(vector<vector<double>> weights) {
     this->weights = weights;
 }
 
-Matrix Layer::getWeights() const {
+vector<vector<double>> Layer::getWeights() const {
     return this->weights;
 }
 
-Matrix Layer::getBias() const {
+vector<double> Layer::getBias() const {
     return this->bias;
 }
 
-void Layer::setBias(Matrix bias) {
+void Layer::setBias(vector<double> bias) {
     this->bias = bias;
 }
 
-void Layer::updateBias(Matrix cost) {
-    cost.multiply(0.1);
-    this->bias = this->bias.sub(cost);
+void Layer::updateBias(vector<double> cost) {
+    for (int i=0; i<bias.size(); i++) {
+        bias[i] = bias[i] - (0.1 * cost[i]);
+    }
 }
 
-void Layer::updateWeights(Matrix cost) {
+void Layer::updateWeights(vector<double> cost) {
     cost.multiply(0.1);
     this->weights = this->weights.sub(cost);
 }

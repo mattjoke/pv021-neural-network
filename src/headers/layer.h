@@ -18,39 +18,40 @@ public:
 
     size_t perceptrons_below;
     // Neurons in this layer
-    Matrix weightedSums = Matrix(0, 0);
+    vector<double> weightedSums = {};
     // Incoming weights to this layer
-    Matrix weights = Matrix(0, 0);
+    vector<vector<double>> weights = {};
     // Bias for this layer
-    Matrix bias = Matrix(0, 0);
+    vector<double> bias = {};
     // Activation function for this layer (default: 'relu')
     ActivationFunction activationFunction = Activation::logistic();
 
 public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons) {
         this->perceptrons_below = num_perceptrons_below;
-        this->weights = Matrix(this->perceptrons_below, num_perceptrons);
+        this->weights = {}; // this->perceptrons_below, num_perceptrons
 
-        this->weightedSums = Matrix(num_perceptrons, 1);
-        this->bias = Matrix(1, num_perceptrons);
+        this->weightedSums = {}; // num_perceptrons, 1
+        this->bias = {}; // 1, num_perceptrons
 
         // Randomize weights and bias
         Initialisation::he(2.0 / sqrt(this->perceptrons_below), &this->weights);
-        Initialisation::zero(&this->bias);
-        this->bias.add(0.001);
+        for(int i=0; i<num_perceptrons; i++) {
+            bias.emplace_back(0.001);
+        }
     }
 
-    Matrix feedForward(Matrix inputs);
+    vector<double> feedForward(vector<double> inputs);
 
-    Matrix getWeights() const;
+    vector<vector<double>> getWeights() const;
 
-    void setWeights(Matrix weights);
+    void setWeights(vector<vector<double>> weights);
 
-    Matrix getBias() const;
+    vector<double> getBias() const;
 
-    void setBias(Matrix bias);
+    void setBias(vector<double> bias);
 
-    void updateBias(Matrix cost);
+    void updateBias(vector<double> cost);
 
     void updateWeights(Matrix cost);
 
@@ -58,8 +59,8 @@ public:
         this->weightedSums = neurons;
     }
 
-    Matrix getWeightedSums() const {
-        return this->weightedSums;
+    vector<double> getWeightedSums() const {
+        return weightedSums;
     }
 
     ActivationFunction getActivationFunction() const {
