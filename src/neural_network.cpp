@@ -112,14 +112,13 @@ void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<d
         }
         return;
     }
-
     vector<double> o = {};
-    for (int i=0; i<this->network[network.size() - 2].weightedSums.size(); i++) {
+    for (int i=0; i<network[network.size() - 2].weightedSums.size(); i++) {
         o.emplace_back(activationFunction.function(network[network.size() - 2].weightedSums[i]));
     }
     for (int i=0; i<network[network.size() - 1].weights.size(); i++) {
         for (int j=0; j<network[network.size() - 1].weights[0].size(); j++) {
-            this->network[network.size() - 1].weights[i][j] -= o[i] * 0.1 * cost[j];
+            network[network.size() - 1].weights[i][j] -= o[i] * 0.1 * cost[j];
         }
     }
 
@@ -157,9 +156,15 @@ void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<d
             }
             return;
         } else {
-            // todo watch the materials
-            network[i].updateWeights(network[i - 1].getWeightedSums().map(
-                    activationFunction.function).transpose().multiply(cost));
+            vector<double> o = {};
+            for (int j=0; j<network[i - 1].weightedSums.size(); j++) {
+                o.emplace_back(activationFunction.function(network[i - 1].weightedSums[j]));
+            }
+            for (int j=0; j<network[i].weights.size(); j++) {
+                for (int k=0; k<network[i].weights[0].size(); k++) {
+                    this->network[i].weights[j][k] -= o[j] * 0.1 * cost[k];
+                }
+            }
         }
     }
 }
