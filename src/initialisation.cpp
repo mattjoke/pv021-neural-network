@@ -13,9 +13,9 @@ void Initialisation::leCun(double favIn, vector<vector<double>> *weights) {
     mt19937 generator{rd()};
 
     std::normal_distribution<double> distribution(0.0, favIn);
-    for (int i= 0; i < weights->size(); i++) {
-        for (int j = 0; j < weights[i].size(); j++) {
-            (*weights)[i][j] = distribution(generator);
+    for (auto & i : *weights) {
+        for (double & j : i) {
+            j = distribution(generator);
         }
     }
 };

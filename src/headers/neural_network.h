@@ -29,16 +29,12 @@ private:
     //Network data
     vector<Layer> network;
 
-    // Activation function (default: 'relu')
-    ActivationFunction activationFunction;
-
 public:
     NeuralNetwork(size_t inputLayerSize, size_t outputLayerSize, const vector<size_t> &hiddenLayerSizes) {
         this->inputLayerSize = inputLayerSize;
         this->outputLayerSize = outputLayerSize;
         this->hiddenLayerSizes = hiddenLayerSizes;
         this->numberOfHiddenLayers = hiddenLayerSizes.size();
-        this->activationFunction = Activation::relu();
 
         buildNetwork();
     }
@@ -51,7 +47,7 @@ public:
 
     void train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
 
-    Matrix predict(const vector<double> &inputs);
+    vector<double> predict(const vector<double> &inputs);
 
     vector<vector<double>> predict(const vector<vector<double>> &inputs);
 

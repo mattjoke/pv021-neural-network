@@ -41,6 +41,7 @@ ActivationFunction Activation::relu() {
     ActivationFunction relu{};
     relu.function = [](double sum) { return max(0.0, sum); };
     relu.derivative = [](double sum) {
+        cout << "HERE-IN RELU THO" << endl;
         return sum <= 0 ? 0.0 : 1.0;
     };
     return relu;

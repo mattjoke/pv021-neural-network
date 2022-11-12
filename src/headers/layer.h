@@ -29,16 +29,13 @@ public:
 public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons) {
         this->perceptrons_below = num_perceptrons_below;
-        this->weights = {}; // this->perceptrons_below, num_perceptrons
+        this->weights = vector<vector<double>>(this->perceptrons_below, vector<double>(num_perceptrons, 0.0)); // this->perceptrons_below, num_perceptrons
 
-        this->weightedSums = {}; // num_perceptrons, 1
-        this->bias = {}; // 1, num_perceptrons
+        this->weightedSums = vector<double>(num_perceptrons); // num_perceptrons, 1
+        this->bias = vector<double>(num_perceptrons, 0.001); // 1, num_perceptrons
 
-        // Randomize weights and bias
+        // Randomize weights
         Initialisation::he(2.0 / sqrt(this->perceptrons_below), &this->weights);
-        for(int i=0; i<num_perceptrons; i++) {
-            bias.emplace_back(0.001);
-        }
     }
 
     vector<double> feedForward(vector<double> inputs);
@@ -53,11 +50,11 @@ public:
 
     void updateBias(vector<double> cost);
 
-    void updateWeights(Matrix cost);
+    //void updateWeights(Matrix cost);
 
-    void getWeightedSums(Matrix neurons) {
-        this->weightedSums = neurons;
-    }
+//    void getWeightedSums(Matrix neurons) {
+//        this->weightedSums = neurons;
+//    }
 
     vector<double> getWeightedSums() const {
         return weightedSums;

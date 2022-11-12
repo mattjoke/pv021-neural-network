@@ -1,8 +1,5 @@
 #include "neural_network.h"
 
-void NeuralNetwork::setActivationFunction(const std::string &activation) {
-    this->activationFunction = Activation::parseActivationFunction(activation);
-}
 
 void NeuralNetwork::setInputLayerSize(size_t size) {
     this->inputLayerSize = size;
@@ -90,11 +87,11 @@ void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<d
 
     // Cost derivative
     vector<double> zL = network[network.size() - 1].getWeightedSums();
-    for (int i=0; i<zL.size(); i++) {
-        zL[i] = activationFunction.derivative(zL[i]);
+    for (int i = 0; i < zL.size(); i++) {
+        zL[i] = network[network.size() - 1].activationFunction.derivative(zL[i]);
     }
     vector<double> cost = costDerivative(ff, targets);
-    for (int i=0; i<cost.size(); i++) {
+    for (int i = 0; i < cost.size(); i++) {
         cost[i] = cost[i] * zL[i];
     }
 
@@ -102,68 +99,74 @@ void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<d
     network[network.size() - 1].updateBias(cost);
     if (network.size() == 1) {
         vector<double> t = {};
-        for (int i=0; i<inputs.size(); i++) {
-            t.emplace_back(activationFunction.function(inputs[i]));
+        for (int i = 0; i < inputs.size(); i++) {
+            t.emplace_back(network[0].activationFunction.function(inputs[i]));
         }
-        for (int i=0; i<network[network.size() - 1].weights.size(); i++) {
-            for (int j=0; j<network[network.size() - 1].weights[0].size(); j++) {
-                network[network.size() - 1].weights[i][j] -= t[i] * 0.1 * cost[j];
+        for (int i = 0; i < network[network.size() - 1].weights.size(); i++) {
+            for (int j = 0; j < network[network.size() - 1].weights[0].size(); j++) {
+                network[0].weights[i][j] -= t[i] * 0.1 * cost[j];
             }
         }
         return;
     }
-    vector<double> o = {};
-    for (int i=0; i<network[network.size() - 2].weightedSums.size(); i++) {
-        o.emplace_back(activationFunction.function(network[network.size() - 2].weightedSums[i]));
+    vector<double> outputsFromLowerLayer = {};
+    // Apply activation function to the weighted sums
+    for (int i = 0; i < network[network.size() - 2].weightedSums.size(); i++) {
+        outputsFromLowerLayer.emplace_back(
+                network[network.size() - 2].activationFunction.function(network[network.size() - 2].weightedSums[i]));
     }
-    for (int i=0; i<network[network.size() - 1].weights.size(); i++) {
-        for (int j=0; j<network[network.size() - 1].weights[0].size(); j++) {
-            network[network.size() - 1].weights[i][j] -= o[i] * 0.1 * cost[j];
+    // Update weights
+    for (int i = 0; i < network[network.size() - 1].weights.size(); i++) {
+        for (int j = 0; j < network[network.size() - 1].weights[0].size(); j++) {
+            network[network.size() - 1].weights[i][j] -= outputsFromLowerLayer[i] * 0.1 * cost[j];
         }
     }
 
     // Backpropagation
-    for (int i = this->network.size() - 2; i >= 0; i--) {
+    for (int i = network.size() - 2; i >= 0; i--) {
         vector<double> sp = {};
-        for (int j=0; j<network[i].weightedSums.size(); j++) {
-            sp.emplace_back(activationFunction.derivative(network[i].weightedSums[j]));
+        for (int j = 0; j < network[i].weightedSums.size(); j++) {
+            sp.emplace_back(network[i].activationFunction.derivative(network[i].weightedSums[j]));
         }
         vector<double> delta = {};
-        for(int j=0; j<cost.size(); j++) {
+
+        for (int k = 0; k < network[i + 1].weights.size(); k++) {
             double num = 0;
-            for (int k=0; k<network[i+1].weights[0].size(); k++) {
-                num += cost[j] * network[i+1].weights[j][k];
+            for (int j = 0; j < cost.size(); j++) {
+                num += cost[j] * network[i + 1].weights[j][k];
             }
             delta.emplace_back(num);
         }
+
+//        for(int j=0; j<cost.size(); j++) {
+//            double num = 0;
+//            for (int k=0; k<network[i+1].weights[0].size(); k++) {
+//                num += cost[j] * network[i+1].weights[j][k];
+//            }
+//            delta.emplace_back(num);
+//        }
         cost = {};
-        for (int j=0; j<delta.size(); j++) {
+        for (int j = 0; j < delta.size(); j++) {
             cost.emplace_back(delta[j] * sp[j]);
         }
 
         // Update weights and biases
         this->network[i].updateBias(cost);
         if (i == 0) {
-            vector<double> t = {};
-            for (int j=0; j<inputs.size(); j++) {
-                t.emplace_back(activationFunction.function(inputs[i]));
-            }
-
-            for (int j=0; j<network[network.size() - 1].weights.size(); j++) {
-                for (int k=0; k<network[network.size() - 1].weights[0].size(); k++) {
-                    network[network.size() - 1].weights[j][k] -= t[j] * 0.1 * cost[k];
+            for (int j = 0; j < network[0].weights.size(); j++) {
+                for (int k = 0; k < network[0].weights[0].size(); k++) {
+                    network[0].weights[j][k] -= inputs[j] * 0.1 * cost[k];
                 }
             }
             return;
-        } else {
-            vector<double> o = {};
-            for (int j=0; j<network[i - 1].weightedSums.size(); j++) {
-                o.emplace_back(activationFunction.function(network[i - 1].weightedSums[j]));
-            }
-            for (int j=0; j<network[i].weights.size(); j++) {
-                for (int k=0; k<network[i].weights[0].size(); k++) {
-                    this->network[i].weights[j][k] -= o[j] * 0.1 * cost[k];
-                }
+        }
+        vector<double> outputsFromLowerLayer = {};
+        for (int j = 0; j < network[i - 1].weightedSums.size(); j++) {
+            outputsFromLowerLayer.emplace_back(network[i].activationFunction.function(network[i - 1].weightedSums[j]));
+        }
+        for (int j = 0; j < network[i].weights.size(); j++) {
+            for (int k = 0; k < network[i].weights[0].size(); k++) {
+                this->network[i].weights[j][k] -= outputsFromLowerLayer[j] * 0.1 * cost[k];
             }
         }
     }
@@ -172,17 +175,17 @@ void NeuralNetwork::backPropagation(const vector<double> &inputs, const vector<d
 vector<vector<double>> NeuralNetwork::predict(const vector<vector<double>> &inputs) {
     vector<vector<double>> outputs;
     for (auto &i: inputs) {
-        Matrix prediction = predict(i);
+        vector<double> prediction = predict(i);
         vector<double> output;
-        for (int j = 0; j < prediction.getCols(); ++j) {
-            output.emplace_back(prediction.at(0, j));
+        for (int j = 0; j < prediction.size(); ++j) {
+            output.emplace_back(prediction.at(j));
         }
         outputs.emplace_back(output);
     }
     return outputs;
 }
 
-Matrix NeuralNetwork::predict(const vector<double> &input) {
+vector<double> NeuralNetwork::predict(const vector<double> &input) {
     return feedForward(input);
 }
 
@@ -226,7 +229,7 @@ void NeuralNetwork::accuracy(const vector<vector<double>> &inputs, const vector<
         } else {
             cout << inputs[i][0] << " " << inputs[i][1] << endl;
             cout << targets[i][0] << " " << targets[i][1] << endl;
-            cout <<"------"<<endl;
+            cout << "------" << endl;
         }
     }
     cout << "Accuracy: " << (double) correct / inputs.size() << endl;

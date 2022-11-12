@@ -7,18 +7,18 @@
 using namespace std;
 
 vector<double> Layer::feedForward(vector<double> inputs) {
-    for (int i=0; i<weights.size(); i++) {
-        weightedSums[i] = 0;
-        for (int j=0; j < weights[0].size(); j++) {
-            weightedSums[i] += weights[i][j] * inputs[j];
+    // weighted sums.size() == inputs.size()
+    for (int i=0; i<weightedSums.size(); i++) {
+        weightedSums[i] = bias[i];
+        for (int j=0; j < inputs.size(); j++) {
+            weightedSums[i] += weights[j][i] * inputs[j];
         }
-        weightedSums[i] += bias[i];
     }
-
-    for (int i=0; i<inputs.size(); i++) {
-        inputs[i] = this->activationFunction.function(weightedSums[i]);
+    vector<double> outputs(weightedSums.size());
+    for (int i=0; i<weightedSums.size(); i++) {
+        outputs[i] = this->activationFunction.function(weightedSums[i]);
     }
-    return inputs;
+    return outputs;
 }
 
 void Layer::setWeights(vector<vector<double>> weights) {
@@ -43,17 +43,24 @@ void Layer::updateBias(vector<double> cost) {
     }
 }
 
-void Layer::updateWeights(vector<double> cost) {
-    cost.multiply(0.1);
-    this->weights = this->weights.sub(cost);
-}
+//void Layer::updateWeights(vector<double> cost) {
+//    cost.multiply(0.1);
+//    this->weights = this->weights.sub(cost);
+//}
 
 void Layer::printInformation() const {
 cout << "Layer information:" << endl;
     cout << "Number of perceptrons below: " << this->perceptrons_below << endl;
-    cout << "Number of perceptrons: " << this->weightedSums.getRows() << endl;
+    cout << "Number of perceptrons: " << this->weightedSums.size() << endl;
     cout << "Weights:" << endl;
-    this->weights.printMatrix();
+    for (auto row:weights) {
+        for (auto elem: row) {
+            cout << elem << " ";
+        }
+        cout << endl;
+    }
     cout << "Bias:" << endl;
-    this->bias.printMatrix();
+    for (auto elem: bias) {
+        cout << elem << " " << endl;
+    }
 }

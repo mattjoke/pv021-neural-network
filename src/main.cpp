@@ -34,14 +34,15 @@ int main() {
     }
     cout << "-------------------" << endl;
 
-
-    /*
+    auto predictions = nn.predict(dataset);
+    nn.accuracy(predictions, targets);
     // nn.printData();
     // auto predictions = nn.predict(dataset);
     // nn.accuracy(predictions, targets);
     return 0;
 
 
+    /*
     auto *m = new Matrix(2, 3);
     m->add(+1);
     // matrix->printMatrix();
@@ -97,6 +98,5 @@ int main() {
     second->bias.printMatrix();
 
     second->feedForward(first->feedForward(f)).printMatrix();
-
      */
 }
