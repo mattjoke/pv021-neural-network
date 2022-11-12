@@ -25,7 +25,6 @@ private:
     // Learning rate
     double learningRate = 0.15;
 
-
     //Network data
     vector<Layer> network;
 
@@ -45,7 +44,9 @@ public:
 
     void backPropagation(const vector<double> &inputs, const vector<double> &targets);
 
-    void train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
+    void train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets, size_t batchSize = 100, size_t epochs = 5);
+
+    void trainBatch(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
 
     vector<double> predict(const vector<double> &inputs);
 

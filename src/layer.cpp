@@ -15,8 +15,12 @@ vector<double> Layer::feedForward(vector<double> inputs) {
         }
     }
     vector<double> outputs(weightedSums.size());
+    double wholeSum = 0.0;
+    for (double weightedSum : weightedSums) {
+        wholeSum += exp(weightedSum);
+    }
     for (int i=0; i<weightedSums.size(); i++) {
-        outputs[i] = this->activationFunction.function(weightedSums[i]);
+        outputs[i] = this->activationFunction.function(weightedSums[i], wholeSum);
     }
     return outputs;
 }
@@ -39,7 +43,7 @@ void Layer::setBias(vector<double> bias) {
 
 void Layer::updateBias(vector<double> cost) {
     for (int i=0; i<bias.size(); i++) {
-        bias[i] = bias[i] - (0.1 * cost[i]);
+        bias[i] = bias[i] - (this->learningRate * cost[i]);
     }
 }
 

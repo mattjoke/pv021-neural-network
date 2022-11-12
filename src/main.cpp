@@ -1,5 +1,3 @@
-#include <iostream>
-#include <map>
 #include "matrix.h"
 #include "layer.h"
 #include "perceptron.cpp"
@@ -9,6 +7,7 @@
 using namespace std;
 
 int main() {
+    /*
     auto nn = NeuralNetwork(2, 2, {3});
 
     vector<vector<double>> dataset = {{0, 0},
@@ -24,7 +23,7 @@ int main() {
     // nn.printData();
     for (int i = 0; i < 10000; ++i) {
         // First output is 1 second is 0
-        nn.train(dataset, targets);
+        nn.trainBatch(dataset, targets);
 
         if (i % 1000 == 100) {
             cout << "Epoch: " << i << endl;
@@ -32,17 +31,31 @@ int main() {
             nn.accuracy(predictions, targets);
         }
     }
-    cout << "-------------------" << endl;
 
     auto predictions = nn.predict(dataset);
     nn.accuracy(predictions, targets);
-    // nn.printData();
-    // auto predictions = nn.predict(dataset);
-    // nn.accuracy(predictions, targets);
+    cout << "-------------------" << endl;
+    */
+    string images_path = R"(../data/fashion_mnist_train_vectors.csv)";
+    string labels_path = R"(../data/fashion_mnist_train_labels.csv)";
+    cout << "Loading data..." << endl;
+    auto ih = new ImageHolder(images_path, labels_path, 1000);
+    cout << "Data loaded: " << ih->get_num_images() << " images" << endl;
+
+    vector<vector<double>> images = ih->get_images(0, 100);
+    vector<vector<double>> labels = ih->get_labels(0, 100);
+
+    auto nn = NeuralNetwork(784, 10, {128, 64, 32});
+
+    cout << "Training..." << endl;
+    nn.train(images, labels);
+    cout << "Training done" << endl;
+    auto predictions = nn.predict(images);
+    nn.accuracy(predictions, labels);
     return 0;
-
-
     /*
+
+
     auto *m = new Matrix(2, 3);
     m->add(+1);
     // matrix->printMatrix();
