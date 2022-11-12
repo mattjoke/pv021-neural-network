@@ -1,39 +1,74 @@
 #include "activation.h"
+
 using namespace std;
 
-double Activation::identity(double sum)
-{
-    return sum;
+
+ActivationFunction Activation::identity() {
+    ActivationFunction identity{};
+    identity.function = [](double sum) {
+        return sum;
+    };
+    identity.derivative = [](double sum) {
+        return 1.0;
+    };
+    return identity;
 }
 
-double Activation::logistic(double sum)
-{
-    return 1 / (1 + exp(-sum));
+ActivationFunction Activation::logistic() {
+    ActivationFunction logistic{};
+    logistic.function = [](double sum) {
+        return 1.0 / (1.0 + exp(-sum));
+    };
+    logistic.derivative = [](double sum) {
+        double f = 1.0 / (1.0 + exp(-sum));
+        return f * (1.0 - f);
+    };
+    return logistic;
 }
 
-double Activation::tanh(double sum)
-{
-    return ::tanh(sum);
+ActivationFunction Activation::tanh() {
+    ActivationFunction tanh{};
+    tanh.function = [](double sum) {
+        return ::tanh(sum);
+    };
+    tanh.derivative = [](double sum) {
+        return 1.0 - pow(::tanh(sum), 2);
+    };
+    return tanh;
 }
 
-double Activation::relu(double sum)
-{
-    return sum >= 0 ? sum : 0;
+ActivationFunction Activation::relu() {
+    ActivationFunction relu{};
+    relu.function = [](double sum) { return max(0.0, sum); };
+    relu.derivative = [](double sum) {
+        cout << "HERE-IN RELU THO" << endl;
+        return sum <= 0 ? 0.0 : 1.0;
+    };
+    return relu;
 }
 
-void Activation::parseActivationFunction(const string& activation, double (**activationFunction)(double sum))
-{
-    *activationFunction = Activation::relu;
-    if (activation == "identity")
-    {
-        *activationFunction = Activation::identity;
+/*
+ActivationFunction Activation::softmax() {
+    ActivationFunction softmax{};
+    softmax.function = [](double sum) {
+        return exp(sum);
+    };
+    softmax.derivative = [](double sum) {
+        return exp(sum);
+    };
+    return softmax;
+}
+ */
+
+ActivationFunction Activation::parseActivationFunction(const string &activation) {
+    if (activation == "identity") {
+        return Activation::identity();
     }
-    if (activation == "logistic")
-    {
-        *activationFunction = Activation::logistic;
+    if (activation == "logistic") {
+        return Activation::logistic();
     }
-    if (activation == "tanh")
-    {
-        *activationFunction = Activation::tanh;
+    if (activation == "tanh") {
+        return Activation::tanh();
     }
+    return Activation::relu();
 }

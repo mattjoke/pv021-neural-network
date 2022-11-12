@@ -8,10 +8,10 @@
 #include <iostream>
 #include "activation.h"
 #include "utils.h"
+
 using namespace std;
 
-class NeuralNetwork
-{
+class NeuralNetwork {
 private:
     // Layer sizes
     size_t inputLayerSize;
@@ -22,34 +22,54 @@ private:
     size_t numberOfHiddenLayers;
     vector<size_t> hiddenLayerSizes;
 
+    // Learning rate
+    double learningRate = 0.15;
+
 
     //Network data
     vector<Layer> network;
 
-    // Activation function (default: 'relu')
-    double (*activationFunction)(double sum);
-    // Solver function
-    double (*solverFunction)(double sum);
-
 public:
-    NeuralNetwork(size_t inputLayerSize, size_t outputLayerSize, const vector<size_t>& hiddenLayerSizes)
-    {
+    NeuralNetwork(size_t inputLayerSize, size_t outputLayerSize, const vector<size_t> &hiddenLayerSizes) {
         this->inputLayerSize = inputLayerSize;
         this->outputLayerSize = outputLayerSize;
         this->hiddenLayerSizes = hiddenLayerSizes;
         this->numberOfHiddenLayers = hiddenLayerSizes.size();
-        this->activationFunction = Activation::relu;
 
         buildNetwork();
     }
 
     void buildNetwork();
-    Matrix feedForward(const vector<double>& input);
-    void setActivationFunction(const string& activation = "relu");
+
+    vector<double> feedForward(const vector<double> &input);
+
+    void backPropagation(const vector<double> &inputs, const vector<double> &targets);
+
+    void train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
+
+    vector<double> predict(const vector<double> &inputs);
+
+    vector<vector<double>> predict(const vector<vector<double>> &inputs);
+
+   static void accuracy(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
+
+    void setActivationFunction(const string &activation = "relu");
+
     void setInputLayerSize(size_t size);
+
     void setOutputLayerSize(size_t size);
+
     void setNumberOfHiddenLayers(size_t size);
+
     void printData();
+
+    static vector<double> costDerivative(vector<double> outputActivations, const vector<double> &y) {
+        vector<double> result = {};
+        for (int i=0; i<outputActivations.size(); i++) {
+            result.emplace_back(outputActivations[i] - y[i]);
+        }
+        return result;
+    }
 };
 
 

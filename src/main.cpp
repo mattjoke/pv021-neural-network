@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 #include "matrix.h"
 #include "layer.h"
 #include "perceptron.cpp"
@@ -7,24 +8,47 @@
 
 using namespace std;
 
-int main()
-{
-    // Create a neural network with 2 inputs, 1 output and 1 hidden layer with 2 neurons
-    // NeuralNetwork nn(2, 1, {2,3,4,5,6,7});
-    // nn.printData();
+int main() {
+    auto nn = NeuralNetwork(2, 2, {3});
 
-    auto nn = NeuralNetwork(1,2,{2,2});
-    nn.printData();
+    vector<vector<double>> dataset = {{0, 0},
+                                      {0, 1},
+                                      {1, 0},
+                                      {1, 1}};
+    // First column is 1, second column is 0
+    vector<vector<double>> targets = {{0, 1}, // 0
+                                      {1, 0}, // 1
+                                      {1, 0}, // 1
+                                      {0, 1}}; // 0
+
+    // nn.printData();
+    for (int i = 0; i < 10000; ++i) {
+        // First output is 1 second is 0
+        nn.train(dataset, targets);
+
+        if (i % 1000 == 100) {
+            cout << "Epoch: " << i << endl;
+            auto predictions = nn.predict(dataset);
+            nn.accuracy(predictions, targets);
+        }
+    }
+    cout << "-------------------" << endl;
+
+    auto predictions = nn.predict(dataset);
+    nn.accuracy(predictions, targets);
+    // nn.printData();
+    // auto predictions = nn.predict(dataset);
+    // nn.accuracy(predictions, targets);
     return 0;
 
 
+    /*
     auto *m = new Matrix(2, 3);
     m->add(+1);
     // matrix->printMatrix();
 
     auto *n = new Matrix(1, 2);
 
-    n->randomise();
     n->printMatrix();
 
     n->transpose();
@@ -43,7 +67,7 @@ int main()
     l->getBias().printMatrix();
     *n = l->feedForward(*n);
     n->printMatrix();
-    
+
     // Oto
     m->printMatrix();
     n->printMatrix();
@@ -64,15 +88,15 @@ int main()
     auto f = ih->get_image_as_matrix(0);
 
 
-    auto* first = new Layer(784, 128);
+    auto *first = new Layer(784, 128);
     cout << "bias:" << endl;
     first->bias.printMatrix();
 
 
-    auto* second = new Layer(128, 10);
+    auto *second = new Layer(128, 10);
     cout << "bias:" << endl;
     second->bias.printMatrix();
 
     second->feedForward(first->feedForward(f)).printMatrix();
-
+     */
 }

@@ -37,15 +37,28 @@ void Matrix::add(double n) {
 
 void Matrix::add(Matrix n) {
     if (rows != n.rows || cols != n.cols) {
-        return;
+        throw invalid_argument("Matrix::add -> Matrices must have the same dimensions");
     }
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] += n.matrix[i][j];
-
         }
     }
 }
+
+Matrix Matrix::sub(Matrix n) {
+    if (rows != n.rows || cols != n.cols) {
+        throw invalid_argument("Matrix::sub -> Matrix dimensions must match");
+    }
+    Matrix result = Matrix(rows, cols);
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
+            result.matrix[i][j] = this->matrix[i][j] - n.matrix[i][j];
+        }
+    }
+    return result;
+}
+
 
 void Matrix::multiply(double n) {
     for (size_t i = 0; i < this->rows; i++) {
@@ -58,8 +71,8 @@ void Matrix::multiply(double n) {
 // A.K.A. Cross-Product
 Matrix Matrix::multiply(Matrix n) {
     if (this->cols != n.rows) {
-        invalid_argument("Left Matrix should have the same rows as the columns in the Right Matrix");
-        return Matrix(0, 0);
+        throw invalid_argument(
+                "Matrix::multiply -> Left Matrix should have the same rows as the columns in the Right Matrix");
     }
     auto *p = new Matrix(this->rows, n.cols);
     for (size_t i = 0; i < p->rows; i++) {
@@ -78,16 +91,14 @@ Matrix Matrix::multiply(Matrix n) {
     return *p;
 }
 
-void Matrix::transpose() {
-    auto *newMatrix = new Matrix(this->cols, this->rows);
+Matrix Matrix::transpose() {
+    auto newMatrix = Matrix(this->cols, this->rows);
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            newMatrix->matrix[j][i] = this->matrix[i][j];
+            newMatrix.matrix[j][i] = this->matrix[i][j];
         }
     }
-    this->cols = newMatrix->cols;
-    this->rows = newMatrix->rows;
-    this->matrix = newMatrix->matrix;
+    return newMatrix;
 }
 
 void Matrix::printMatrix() const {
@@ -101,7 +112,8 @@ void Matrix::printMatrix() const {
     cout << "\n";
 }
 
-void Matrix::map(double (*activation)(double sum)) {
+void Matrix::mapSelf(double (*activation)(double sum)) {
+    double expSum = this->map([](double sum) { return exp(sum); }).sum();
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
             this->matrix[i][j] = activation(this->matrix[i][j]);
@@ -109,16 +121,15 @@ void Matrix::map(double (*activation)(double sum)) {
     }
 }
 
-
-// DEPRECATED
-void Matrix::randomise() {
+Matrix Matrix::map(double (*activation)(double sum)) {
+    Matrix result = Matrix(this->rows, this->cols);
     for (size_t i = 0; i < this->rows; i++) {
         for (size_t j = 0; j < this->cols; j++) {
-            this->matrix[i][j] = std::rand() % 10;
+            result.matrix[i][j] = activation(this->matrix[i][j]);
         }
     }
+    return result;
 }
-
 
 double Matrix::at(int i, int j) {
     return this->matrix[i][j];
@@ -126,4 +137,36 @@ double Matrix::at(int i, int j) {
 
 void Matrix::set(int i, int j, double num) {
     this->matrix[i][j] = num;
+}
+
+Matrix Matrix::hadamard(Matrix n) {
+    // Element-wise multiplication
+    if (this->rows != n.rows || this->cols != n.cols) {
+        throw invalid_argument("Matrix::hadamard -> Matrices must have the same dimensions, Matrix HADAMARD");
+    }
+    Matrix result = Matrix(this->rows, this->cols);
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
+            result.matrix[i][j] = this->matrix[i][j] * n.matrix[i][j];
+        }
+    }
+    return result;
+}
+
+size_t Matrix::getRows() const {
+    return this->rows;
+}
+
+size_t Matrix::getCols() const {
+    return this->cols;
+}
+
+double Matrix::sum() {
+    double result = 0;
+    for (size_t i = 0; i < this->rows; i++) {
+        for (size_t j = 0; j < this->cols; j++) {
+            result += this->matrix[i][j];
+        }
+    }
+    return result;
 }
