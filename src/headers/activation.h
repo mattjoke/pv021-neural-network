@@ -7,7 +7,7 @@
 using namespace std;
 
 struct ActivationFunction {
-    double (*function)(double sum, double = 0);
+    double (*function)(double sum);
     double (*derivative)(double sum);
 };
 
