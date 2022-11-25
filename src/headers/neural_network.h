@@ -71,6 +71,8 @@ public:
         }
         return result;
     }
+
+    vector<double> getOutputsFromLowerLayer(int i, vector<double> inputs);
 };
 
 

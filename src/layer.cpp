@@ -15,14 +15,18 @@ vector<double> Layer::feedForward(vector<double> inputs) {
         }
     }
     vector<double> outputs(weightedSums.size());
-    double wholeSum = 0.0;
-    for (double weightedSum : weightedSums) {
-        wholeSum += exp(weightedSum);
-    }
     for (int i=0; i<weightedSums.size(); i++) {
-        outputs[i] = this->activationFunction.function(weightedSums[i], wholeSum);
+        outputs[i] = this->activationFunction.function(weightedSums[i]);
     }
+//    for (double & output : outputs) {
+//        output = output < 0.0000000001 ? 0 : output;
+//    }
+
     return outputs;
+}
+
+vector<double> Layer::backPropagate(vector<double> cost) {
+    return cost;
 }
 
 void Layer::setWeights(vector<vector<double>> weights) {
@@ -43,14 +47,13 @@ void Layer::setBias(vector<double> bias) {
 
 void Layer::updateBias(vector<double> cost) {
     for (int i=0; i<bias.size(); i++) {
-        bias[i] = bias[i] - (this->learningRate * cost[i]);
+        bias[i] -= (this->learningRate * cost[i]);
     }
 }
 
-//void Layer::updateWeights(vector<double> cost) {
-//    cost.multiply(0.1);
-//    this->weights = this->weights.sub(cost);
-//}
+void Layer::updateWeights(vector<double> cost) {
+    return;
+}
 
 void Layer::printInformation() const {
 cout << "Layer information:" << endl;

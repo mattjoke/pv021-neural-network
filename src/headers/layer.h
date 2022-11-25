@@ -35,14 +35,17 @@ public:
         this->weights = vector<vector<double>>(this->perceptrons_below, vector<double>(num_perceptrons, 0.0)); // this->perceptrons_below, num_perceptrons
 
         this->weightedSums = vector<double>(num_perceptrons); // num_perceptrons, 1
-        this->bias = vector<double>(num_perceptrons, 0.001); // 1, num_perceptrons
+        this->bias = vector<double>(num_perceptrons, 0.01); // 1, num_perceptrons
         this->learningRate = learningRate;
 
         // Randomize weights
         Initialisation::he(2.0 / sqrt(this->perceptrons_below), &this->weights);
+        // Randomize bias
     }
 
     vector<double> feedForward(vector<double> inputs);
+
+    vector<double> backPropagate(vector<double> cost);
 
     vector<vector<double>> getWeights() const;
 
@@ -54,7 +57,7 @@ public:
 
     void updateBias(vector<double> cost);
 
-    //void updateWeights(Matrix cost);
+    void updateWeights(vector<double> cost);
 
 //    void getWeightedSums(Matrix neurons) {
 //        this->weightedSums = neurons;

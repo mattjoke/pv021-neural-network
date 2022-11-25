@@ -5,10 +5,10 @@ using namespace std;
 
 ActivationFunction Activation::identity() {
     ActivationFunction identity{};
-    identity.function = [](double sum, double wholeSum = 0) {
+    identity.function = [](double sum) {
         return sum;
     };
-    identity.derivative = [](double sum, double wholeSum = 0) {
+    identity.derivative = [](double sum) {
         return 1.0;
     };
     return identity;
@@ -16,10 +16,10 @@ ActivationFunction Activation::identity() {
 
 ActivationFunction Activation::logistic() {
     ActivationFunction logistic{};
-    logistic.function = [](double sum, double wholeSum = 0) {
+    logistic.function = [](double sum) {
         return 1.0 / (1.0 + exp(-sum));
     };
-    logistic.derivative = [](double sum, double wholeSum = 0) {
+    logistic.derivative = [](double sum) {
         double f = 1.0 / (1.0 + exp(-sum));
         return f * (1.0 - f);
     };
@@ -28,10 +28,10 @@ ActivationFunction Activation::logistic() {
 
 ActivationFunction Activation::tanh() {
     ActivationFunction tanh{};
-    tanh.function = [](double sum, double wholeSum = 0) {
+    tanh.function = [](double sum) {
         return ::tanh(sum);
     };
-    tanh.derivative = [](double sum, double wholeSum = 0) {
+    tanh.derivative = [](double sum) {
         return 1.0 - pow(::tanh(sum), 2);
     };
     return tanh;
@@ -39,22 +39,18 @@ ActivationFunction Activation::tanh() {
 
 ActivationFunction Activation::relu() {
     ActivationFunction relu{};
-    relu.function = [](double sum, double wholeSum = 0) { return max(0.0, sum); };
-    relu.derivative = [](double sum, double wholeSum = 0) {
+    relu.function = [](double sum) { return max(0.0, sum); };
+    relu.derivative = [](double sum) {
         return sum <= 0 ? 0.0 : 1.0;
     };
     return relu;
 }
 
 
-ActivationFunction Activation::softmax() {
-    ActivationFunction softmax{};
+SoftMaxFunction Activation::softmax() {
+    SoftMaxFunction softmax{};
     softmax.function = [](double sum, double wholeSum) {
         return exp(sum) / wholeSum;
-    };
-    softmax.derivative = [](double sum, double wholeSum) {
-        double f = exp(sum) / wholeSum;
-        return f * (1.0 - f);
     };
     return softmax;
 }

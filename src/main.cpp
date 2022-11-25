@@ -45,7 +45,7 @@ int main() {
     vector<vector<double>> images = ih->get_images(0, 100);
     vector<vector<double>> labels = ih->get_labels(0, 100);
 
-    auto nn = NeuralNetwork(784, 10, {128, 64, 32});
+    auto nn = NeuralNetwork(784, 10, {128,64});
 
     cout << "Training..." << endl;
     nn.train(images, labels);

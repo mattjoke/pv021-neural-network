@@ -14,7 +14,13 @@ ImageHolder::ImageHolder(string images_path, string labels_path, int image_limit
     this->image_limit = image_limit;
     load_images();
     load_labels();
-    standardize();
+
+    for (int i = 0; i < this->num_images; i++) {
+        for (int j = 0; j < this->images[i].size(); j++) {
+            this->images[i][j] = (double) this->images[i][j] / 255.0;
+        }
+    }
+    //standardize();
 }
 
 bool ImageHolder::load_images() {
