@@ -29,12 +29,15 @@ public:
     void compute_mean();
     void compute_std_dev();
     void standardize();
+    void shuffleIndices();
 
 private:
     int num_images;
     int image_limit;
     vector<vector<double>> images;
     vector<int> labels;
+    vector<int> indices;
+
     string images_path;
     string labels_path;
     vector<double> mean;

@@ -3,8 +3,17 @@
 //
 
 #include "headers/layer.h"
+#include "float.h"
 
 using namespace std;
+
+
+void Layer::clearBeforeBatch() {
+    // Inputs are emplaced back, so we need to clear them before each batch
+    inputs = {};
+    weightedSums = {};
+    activatedWeightedSums = {};
+}
 
 vector<double> Layer::feedForward(vector<double> inputs) {
     // weighted sums.size() == inputs.size()
@@ -18,49 +27,29 @@ vector<double> Layer::feedForward(vector<double> inputs) {
     for (int i=0; i<weightedSums.size(); i++) {
         outputs[i] = this->activationFunction.function(weightedSums[i]);
     }
-//    for (double & output : outputs) {
-//        output = output < 0.0000000001 ? 0 : output;
-//    }
-
-    return outputs;
+    this->activatedWeightedSums.emplace_back(tmpActivatedWeightedSums);
+    return tmpActivatedWeightedSums;
 }
 
-vector<double> Layer::backPropagate(vector<double> cost) {
-    return cost;
-}
-
-void Layer::setWeights(vector<vector<double>> weights) {
-    this->weights = weights;
-}
-
-vector<vector<double>> Layer::getWeights() const {
-    return this->weights;
-}
-
-vector<double> Layer::getBias() const {
-    return this->bias;
-}
-
-void Layer::setBias(vector<double> bias) {
-    this->bias = bias;
-}
-
-void Layer::updateBias(vector<double> cost) {
-    for (int i=0; i<bias.size(); i++) {
+void Layer::updateWeightsAndBiases(vector<double> cost, vector<double> outputsFromLowerLayer) {
+    // Update bias
+    for (int i = 0; i < bias.size(); i++) {
         bias[i] -= (this->learningRate * cost[i]);
+    }
+    // Update weights
+    for (int i = 0; i < weights.size(); i++) {
+        for (int j = 0; j < weights[0].size(); j++) {
+            weights[i][j] -= outputsFromLowerLayer[i] * this->learningRate * cost[j];
+        }
     }
 }
 
-void Layer::updateWeights(vector<double> cost) {
-    return;
-}
-
 void Layer::printInformation() const {
-cout << "Layer information:" << endl;
+    cout << "Layer information:" << endl;
     cout << "Number of perceptrons below: " << this->perceptrons_below << endl;
     cout << "Number of perceptrons: " << this->weightedSums.size() << endl;
     cout << "Weights:" << endl;
-    for (auto row:weights) {
+    for (auto row: weights) {
         for (auto elem: row) {
             cout << elem << " ";
         }

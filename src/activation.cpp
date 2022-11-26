@@ -52,6 +52,9 @@ SoftMaxFunction Activation::softmax() {
     softmax.function = [](double sum, double wholeSum) {
         return exp(sum) / wholeSum;
     };
+    softmax.derivative = [](double sum, double wholeSum) {
+        return sum;
+    };
     return softmax;
 }
 

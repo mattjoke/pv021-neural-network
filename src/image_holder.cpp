@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <utility>
+#include <random>
 #include "image_holder.h"
 
 ImageHolder::ImageHolder(string images_path, string labels_path, int image_limit) {
@@ -20,6 +21,7 @@ ImageHolder::ImageHolder(string images_path, string labels_path, int image_limit
             this->images[i][j] = (double) this->images[i][j] / 255.0;
         }
     }
+    shuffleIndices();
     //standardize();
 }
 
@@ -119,7 +121,7 @@ vector<double> ImageHolder::get_label(int i) {
 vector<vector<double>> ImageHolder::get_images(int start, int end) {
     vector<vector<double>> out;
     for (int i = start; i < end; i++) {
-        out.emplace_back(this->images[i]);
+        out.emplace_back(this->images[indices[i]]);
     }
     return out;
 }
@@ -128,7 +130,7 @@ vector<vector<double>> ImageHolder::get_labels(int start, int end) {
     vector<vector<double>> out;
     for (int i = start; i < end; i++) {
         auto label = vector<double>(10, 0);
-        label[labels[i]] = 1;
+        label[labels[indices[i]]] = 1;
         out.emplace_back(label);
     }
     return out;
@@ -172,4 +174,13 @@ void ImageHolder::standardize() {
             images[i][j] = ((images[i][j] - mean[j]) / stddev[j]);
         }
     }
+}
+
+void ImageHolder::shuffleIndices() {
+    for (int i = 0; i < num_images; i++) {
+        indices.emplace_back(i);
+    }
+    random_device rd;
+    mt19937 g(rd());
+    shuffle(indices.begin(), indices.end(), g);
 }

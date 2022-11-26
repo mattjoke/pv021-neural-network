@@ -17,6 +17,7 @@ class Layer {
 public:
 
     size_t perceptrons_below;
+    size_t num_perceptrons;
     // Neurons in this layer
     vector<double> weightedSums = {};
     // Incoming weights to this layer
@@ -32,10 +33,11 @@ public:
 public:
     Layer(size_t num_perceptrons_below, size_t num_perceptrons, double learningRate) {
         this->perceptrons_below = num_perceptrons_below;
+        this->num_perceptrons = num_perceptrons;
         this->weights = vector<vector<double>>(this->perceptrons_below, vector<double>(num_perceptrons, 0.0)); // this->perceptrons_below, num_perceptrons
 
-        this->weightedSums = vector<double>(num_perceptrons); // num_perceptrons, 1
-        this->bias = vector<double>(num_perceptrons, 0.01); // 1, num_perceptrons
+        clearBeforeBatch();
+        this->bias = vector<double>(num_perceptrons, 0.01);
         this->learningRate = learningRate;
 
         // Randomize weights
@@ -43,33 +45,11 @@ public:
         // Randomize bias
     }
 
+    void clearBeforeBatch();
+
     vector<double> feedForward(vector<double> inputs);
 
-    vector<double> backPropagate(vector<double> cost);
-
-    vector<vector<double>> getWeights() const;
-
-    void setWeights(vector<vector<double>> weights);
-
-    vector<double> getBias() const;
-
-    void setBias(vector<double> bias);
-
-    void updateBias(vector<double> cost);
-
-    void updateWeights(vector<double> cost);
-
-//    void getWeightedSums(Matrix neurons) {
-//        this->weightedSums = neurons;
-//    }
-
-    vector<double> getWeightedSums() const {
-        return weightedSums;
-    }
-
-    ActivationFunction getActivationFunction() const {
-        return this->activationFunction;
-    }
+    void updateWeightsAndBiases(vector<double> cost, vector<double> outputsFromLowerLayer);
 
     void printInformation() const;
 };

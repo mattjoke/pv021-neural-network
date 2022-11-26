@@ -23,7 +23,7 @@ private:
     vector<size_t> hiddenLayerSizes;
 
     // Learning rate
-    double learningRate = 0.0001;
+    double learningRate = 0.15;
 
     //Network data
     vector<Layer> network;
@@ -42,9 +42,9 @@ public:
 
     vector<double> feedForward(const vector<double> &input);
 
-    void backPropagation(const vector<double> &inputs, const vector<double> &targets);
+    void backPropagation(const vector<vector<double>> &gradient);
 
-    void train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets, size_t batchSize = 100, size_t epochs = 5);
+    void train(const vector<vector<double>> &inputs, const vector<vector<double>> &targets, size_t batchSize = 100, size_t epochs = 20);
 
     void trainBatch(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
 
@@ -53,14 +53,6 @@ public:
     vector<vector<double>> predict(const vector<vector<double>> &inputs);
 
    static void accuracy(const vector<vector<double>> &inputs, const vector<vector<double>> &targets);
-
-    void setActivationFunction(const string &activation = "relu");
-
-    void setInputLayerSize(size_t size);
-
-    void setOutputLayerSize(size_t size);
-
-    void setNumberOfHiddenLayers(size_t size);
 
     void printData();
 
@@ -72,7 +64,7 @@ public:
         return result;
     }
 
-    vector<double> getOutputsFromLowerLayer(int i, vector<double> inputs);
+    vector<double> getOutputsFromLowerLayer(size_t i);
 };
 
 

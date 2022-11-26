@@ -45,17 +45,15 @@ int main() {
     vector<vector<double>> images = ih->get_images(0, 100);
     vector<vector<double>> labels = ih->get_labels(0, 100);
 
-    auto nn = NeuralNetwork(784, 10, {128,64});
+    auto nn = NeuralNetwork(784, 10, {128, 20});
 
     cout << "Training..." << endl;
-    nn.train(images, labels);
+    nn.train(images, labels, 100, -1);
     cout << "Training done" << endl;
     auto predictions = nn.predict(images);
     nn.accuracy(predictions, labels);
     return 0;
     /*
-
-
     auto *m = new Matrix(2, 3);
     m->add(+1);
     // matrix->printMatrix();
