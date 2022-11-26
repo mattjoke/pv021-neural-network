@@ -49,7 +49,10 @@ vector<double> NeuralNetwork::feedForward(const vector<double> &input) {
     }
 
     // First layer -> Last Hidden Layer
-    vector<double> buffer = input;
+    vector<double> buffer = {};
+    for (double elem : input) {
+        buffer.emplace_back(elem);
+    }
     for (int i = 0; i < this->network.size() - 1; ++i) {
         buffer = this->network[i].feedForward(buffer);
     }
@@ -64,6 +67,7 @@ vector<double> NeuralNetwork::feedForward(const vector<double> &input) {
             tmpWeightedSums[i] += this->network[this->network.size() - 1].weights[j][i] * buffer[j];
         }
     }
+    this->network[this->network.size() - 1].weightedSums.emplace_back(tmpWeightedSums);
 
     // Bleh this is ugly
     double max = *max_element(tmpWeightedSums.begin(), tmpWeightedSums.end());

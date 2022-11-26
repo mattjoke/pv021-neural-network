@@ -17,15 +17,20 @@ void Layer::clearBeforeBatch() {
 
 vector<double> Layer::feedForward(vector<double> inputs) {
     // weighted sums.size() == inputs.size()
-    for (int i=0; i<weightedSums.size(); i++) {
-        weightedSums[i] = bias[i];
-        for (int j=0; j < inputs.size(); j++) {
-            weightedSums[i] += weights[j][i] * inputs[j];
+    this->inputs.emplace_back(inputs);
+    vector<double> tmpWeightedSums(num_perceptrons);
+    for (int i = 0; i < num_perceptrons; i++) {
+        tmpWeightedSums[i] = bias[i];
+        for (int j = 0; j < inputs.size(); j++) {
+            double item = tmpWeightedSums[i] + weights[j][i] * inputs[j];
+            tmpWeightedSums[i] = /*item < DBL_MIN ? 0 :*/ item;
         }
     }
-    vector<double> outputs(weightedSums.size());
-    for (int i=0; i<weightedSums.size(); i++) {
-        outputs[i] = this->activationFunction.function(weightedSums[i]);
+    weightedSums.emplace_back(tmpWeightedSums);
+
+    vector<double> tmpActivatedWeightedSums(num_perceptrons);
+    for (int i = 0; i < num_perceptrons; i++) {
+        tmpActivatedWeightedSums[i] = this->activationFunction.function(tmpWeightedSums[i]);
     }
     this->activatedWeightedSums.emplace_back(tmpActivatedWeightedSums);
     return tmpActivatedWeightedSums;

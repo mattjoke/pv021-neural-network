@@ -19,7 +19,9 @@ public:
     size_t perceptrons_below;
     size_t num_perceptrons;
     // Neurons in this layer
-    vector<double> weightedSums = {};
+    vector<vector<double>> inputs = {};
+    vector<vector<double>> weightedSums = {};
+    vector<vector<double>> activatedWeightedSums = {};
     // Incoming weights to this layer
     vector<vector<double>> weights = {};
     // Bias for this layer
