@@ -23,7 +23,7 @@ private:
     vector<size_t> hiddenLayerSizes;
 
     // Learning rate
-    double learningRate = 0.15;
+    double learningRate = 0.0001;
 
     //Network data
     vector<Layer> network;
